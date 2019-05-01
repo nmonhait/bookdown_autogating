@@ -1,0 +1,35 @@
+--- 
+title: "Automated Gating of Flow Cytometry Data using the Bioconductor `openCyto` Framework"
+author: 
+- "Nichole Monhait, MPH Candidate"
+- "Colorado School of Public Health, Colorado State University"    
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+#bibliography: [book.bib, packages.bib]
+#biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "This tutorial was created to allow users to automate flow cytometry analysis in R using the `openCyto` package. The tutorial includes steps to complete automation from a flowJo Workspace file. Full details on tutorial contents are included in the following chapters."
+---
+
+# What's inside?
+
+The goal of this tutorial is to take manually gated data from a .wsp flowJo file and use the Bioconductor `openCyto` framework to create an automated gating procedure within R which can be replicated on any dataset. The basic functions used in this tutorial include:  
+
+*openWorkspace()  
+*parseWorkspace()  
+*gatingTemplate()  
+*gating()  
+*plot()  
+*plotGate()    
+
+The example data used in this tutorial is from Colorado State University's Microbiology, Immunology, and Pathology Department. Alternatively, you can input your own flowJo Workspace and follow this tutorial, so long as the file is in .wsp format. 
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```

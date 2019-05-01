@@ -1,0 +1,40 @@
+# Automate Gating
+
+The flow cytometry equipment at CSU will compensate and transform the data automatically. Other tutorials may highlight the steps to compensate and transform data, but these are not relevant to CSU at this moment. In the event that equipment changes, it may be necessary to complete compensation and transformation steps to prepare data. More on the current equipment used as CSU [here](https://www.umassmed.edu/facslab/instrument/core-cytek-aurora2/). 
+
+## Apply Gating  
+
+At this point, you will either return to your cloned GatingSet object that contains raw FCS files or bring in new data to be gated using the same parameters. Apply **gt** to the GatingSet object, where x = **gt** and y = data to be gated.   
+
+```{r apply gt, eval = FALSE}
+gating(x = gt, y = auto_gating)
+```
+
+Just as before, plot both the gating hierarchy and the automated gates. You may notice extra nodes have been added to the hierarchy. Chapter 5 will highlight additional cusomization to remove unwanted nodes and improve upon visualization.    
+
+## Plot Automated Gating  
+
+```{r plot auto gates, eval = FALSE}
+plotGate(auto_gating)
+```
+```{r plot auto hierarchy, eval = FALSE}
+plot(auto_gating)
+```
+
+## Population Statistics  
+
+Both counts and frequencies can be generated for analysis. This can be generate based on the analysis completed in R, or pulled directly from flowJo. To pull from flowJo, simply at `flowJo=TRUE` to either code chunk below.  
+
+**Counts**  
+
+```{r stats count, warning=FALSE, message=FALSE}
+head(getPopStats(auto_gating,satistic="count"))
+```
+
+**Frequencies**  
+
+```{r stats freq, warning=FALSE, message=FALSE}
+head(getPopStats(auto_gating,satistic="freq"))
+```
+
+

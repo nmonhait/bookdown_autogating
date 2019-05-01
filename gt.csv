@@ -1,0 +1,51 @@
+"","alias","pop","parent","dims","gating_method","gating_args","collapseDataForGating","groupBy","preprocessing_method","preprocessing_args"
+"1","Singlets","Singlets","root","FSC-A,FSC-H",NA,NA,NA,NA,NA,NA
+"2","Live","Live","/Singlets","Comp-Zombie Nir-A",NA,NA,NA,NA,NA,NA
+"3","Leukocytes","Leukocytes","/Singlets/Live","FSC-A,SSC-A",NA,NA,NA,NA,NA,NA
+"4","CD3+","CD3+","/Singlets/Live/Leukocytes","Comp-Alexa Fluor 532-A,SSC-H",NA,NA,NA,NA,NA,NA
+"5","CD8+","CD8+","/Singlets/Live/Leukocytes/CD3+","Comp-BV570-A,SSC-H",NA,NA,NA,NA,NA,NA
+"6","CXCR1-","CXCR1-","/Singlets/Live/Leukocytes/CD3+/CD8+","Comp-PE-A",NA,NA,NA,NA,NA,NA
+"7","CXCR1+","CXCR1+","/Singlets/Live/Leukocytes/CD3+/CD8+","Comp-PE-A",NA,NA,NA,NA,NA,NA
+"8","CTLA4-","CTLA4-","/Singlets/Live/Leukocytes/CD3+/CD8+","Comp-BV605-A",NA,NA,NA,NA,NA,NA
+"9","CTLA4+","CTLA4+","/Singlets/Live/Leukocytes/CD3+/CD8+","Comp-BV605-A",NA,NA,NA,NA,NA,NA
+"10","CD153-","CD153-","/Singlets/Live/Leukocytes/CD3+/CD8+","Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"11","CD153+","CD153+","/Singlets/Live/Leukocytes/CD3+/CD8+","Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"12","CD44-","CD44-","/Singlets/Live/Leukocytes/CD3+/CD8+","Comp-APC-Fire 750-A",NA,NA,NA,NA,NA,NA
+"13","Q12: CD27- , CD153-","Q12: CD27- , CD153-","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-BV650-A,Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"14","Q11: CD27+ , CD153-","Q11: CD27+ , CD153-","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-BV650-A,Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"15","Q10: CD27+ , CD153+","Q10: CD27+ , CD153+","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-BV650-A,Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"16","Q9: CD27- , CD153+","Q9: CD27- , CD153+","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-BV650-A,Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"17","Q8: CXCR3- , CXCR5-","Q8: CXCR3- , CXCR5-","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-APC-A,Comp-PerCP-eFluor 710-A",NA,NA,NA,NA,NA,NA
+"18","Q7: CXCR3+ , CXCR5-","Q7: CXCR3+ , CXCR5-","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-APC-A,Comp-PerCP-eFluor 710-A",NA,NA,NA,NA,NA,NA
+"19","Q6: CXCR3+ , CXCR5+","Q6: CXCR3+ , CXCR5+","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-APC-A,Comp-PerCP-eFluor 710-A",NA,NA,NA,NA,NA,NA
+"20","Q5: CXCR3- , CXCR5+","Q5: CXCR3- , CXCR5+","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-APC-A,Comp-PerCP-eFluor 710-A",NA,NA,NA,NA,NA,NA
+"21","Q4: CD122- , SCA1-","Q4: CD122- , SCA1-","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-PE-Cy5-A,Comp-BB515-A",NA,NA,NA,NA,NA,NA
+"22","Q3: CD122+ , SCA1-","Q3: CD122+ , SCA1-","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-PE-Cy5-A,Comp-BB515-A",NA,NA,NA,NA,NA,NA
+"23","Q2: CD122+ , SCA1+","Q2: CD122+ , SCA1+","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-PE-Cy5-A,Comp-BB515-A",NA,NA,NA,NA,NA,NA
+"24","Q1: CD122- , SCA1+","Q1: CD122- , SCA1+","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44-","Comp-PE-Cy5-A,Comp-BB515-A",NA,NA,NA,NA,NA,NA
+"25","CD44+","CD44+","/Singlets/Live/Leukocytes/CD3+/CD8+","Comp-APC-Fire 750-A",NA,NA,NA,NA,NA,NA
+"26","CD62L-","CD62L-","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44+","Comp-PE-Dazzle594-A",NA,NA,NA,NA,NA,NA
+"27","CD62L+","CD62L+","/Singlets/Live/Leukocytes/CD3+/CD8+/CD44+","Comp-PE-Dazzle594-A",NA,NA,NA,NA,NA,NA
+"28","Cd4+","Cd4+","/Singlets/Live/Leukocytes/CD3+","Comp-BV480-A,SSC-H",NA,NA,NA,NA,NA,NA
+"29","CXCR1-","CXCR1-","/Singlets/Live/Leukocytes/CD3+/Cd4+","Comp-PE-A",NA,NA,NA,NA,NA,NA
+"30","CXCR1+","CXCR1+","/Singlets/Live/Leukocytes/CD3+/Cd4+","Comp-PE-A",NA,NA,NA,NA,NA,NA
+"31","CTLA4-","CTLA4-","/Singlets/Live/Leukocytes/CD3+/Cd4+","Comp-BV605-A",NA,NA,NA,NA,NA,NA
+"32","CTLA4+","CTLA4+","/Singlets/Live/Leukocytes/CD3+/Cd4+","Comp-BV605-A",NA,NA,NA,NA,NA,NA
+"33","CD153-","CD153-","/Singlets/Live/Leukocytes/CD3+/Cd4+","Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"34","CD153+","CD153+","/Singlets/Live/Leukocytes/CD3+/Cd4+","Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"35","CD44-","CD44-","/Singlets/Live/Leukocytes/CD3+/Cd4+","Comp-APC-Fire 750-A",NA,NA,NA,NA,NA,NA
+"36","Q12: CD27- , CD153-","Q12: CD27- , CD153-","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-BV650-A,Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"37","Q11: CD27+ , CD153-","Q11: CD27+ , CD153-","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-BV650-A,Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"38","Q10: CD27+ , CD153+","Q10: CD27+ , CD153+","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-BV650-A,Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"39","Q9: CD27- , CD153+","Q9: CD27- , CD153+","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-BV650-A,Comp-BV711-A",NA,NA,NA,NA,NA,NA
+"40","Q8: CXCR3- , CXCR5-","Q8: CXCR3- , CXCR5-","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-APC-A,Comp-PerCP-eFluor 710-A",NA,NA,NA,NA,NA,NA
+"41","Q7: CXCR3+ , CXCR5-","Q7: CXCR3+ , CXCR5-","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-APC-A,Comp-PerCP-eFluor 710-A",NA,NA,NA,NA,NA,NA
+"42","Q6: CXCR3+ , CXCR5+","Q6: CXCR3+ , CXCR5+","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-APC-A,Comp-PerCP-eFluor 710-A",NA,NA,NA,NA,NA,NA
+"43","Q5: CXCR3- , CXCR5+","Q5: CXCR3- , CXCR5+","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-APC-A,Comp-PerCP-eFluor 710-A",NA,NA,NA,NA,NA,NA
+"44","Q4: CD122- , SCA1-","Q4: CD122- , SCA1-","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-PE-Cy5-A,Comp-BB515-A",NA,NA,NA,NA,NA,NA
+"45","Q3: CD122+ , SCA1-","Q3: CD122+ , SCA1-","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-PE-Cy5-A,Comp-BB515-A",NA,NA,NA,NA,NA,NA
+"46","Q2: CD122+ , SCA1+","Q2: CD122+ , SCA1+","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-PE-Cy5-A,Comp-BB515-A",NA,NA,NA,NA,NA,NA
+"47","Q1: CD122- , SCA1+","Q1: CD122- , SCA1+","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-","Comp-PE-Cy5-A,Comp-BB515-A",NA,NA,NA,NA,NA,NA
+"48","CD44+","CD44+","/Singlets/Live/Leukocytes/CD3+/Cd4+","Comp-APC-Fire 750-A",NA,NA,NA,NA,NA,NA
+"49","CD62L-","CD62L-","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44+","Comp-PE-Dazzle594-A",NA,NA,NA,NA,NA,NA
+"50","CD62L+","CD62L+","/Singlets/Live/Leukocytes/CD3+/Cd4+/CD44+","Comp-PE-Dazzle594-A",NA,NA,NA,NA,NA,NA
