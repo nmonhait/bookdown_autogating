@@ -26,7 +26,7 @@
 <meta name="author" content="Colorado School of Public Health, Colorado State University">
 
 
-<meta name="date" content="2019-05-01">
+<meta name="date" content="2019-05-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -200,7 +200,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <div id="read-in-flowjo-file" class="section level2">
 <h2><span class="header-section-number">3.1</span> Read in flowJo file</h2>
-<p>Within flowJo, tranformation, compensation, and gating can be saved as either .xml or .wsp filetypes. This tutorial will only detail steps from a <em>.wsp</em> filetype saved from flowJo. Saving analysis within flowJo is detailed <a href="http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/">here</a>.</p>
+<p>Within flowJo, tranformation, compensation, and gating can be saved as either .xml or .wsp filetypes. This tutorial will only detail steps from a <em>.wsp</em> filetype saved from flowJo. Note that many other tutorials begin from a <em>.xml</em> file, which seems to cause many errors during this analysis. Saving analysis within flowJo is detailed <a href="http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/">here</a>.</p>
 <p>The result of step 1 will be replication of the manual transformation, compensation, and gating from the flowJo workspace saved as an R object. Before you begin, be sure you have loaded the required packages outlined in the previous chapter.</p>
 <p>Once all packages are loaded, save the .wsp file path as an R object called <strong>wsfile</strong>. Next, use <code>openWorkspace()</code> with your R object name to open the .wsp file in R, save this as <strong>ws</strong>. Here is an example of saving and opening <strong>wsfile</strong>. Following this step, <strong>ws</strong> will be saved as a flowWorkspace object containing groups of samples.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(openCyto)
@@ -210,12 +210,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="kw">library</span>(flowStats)
 <span class="kw">library</span>(flowClust)
 <span class="kw">library</span>(plyr)</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">wsfile &lt;-<span class="st"> &quot;/Users/monhait/Desktop/flow_cyto/automated_gating/data/Young_v_Adult_D30_Tcell_Spleen.wsp&quot;</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">wsfile &lt;-<span class="st"> &quot;/Users/monhait/Desktop/group1_v_group2.wsp&quot;</span></code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">ws &lt;-<span class="st"> </span><span class="kw">openWorkspace</span>(wsfile)</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(ws)</code></pre>
 <pre><code>## FlowJo Workspace Version  20.0 
-## File location:  /Users/monhait/Desktop/flow_cyto/automated_gating/data 
-## File name:  Young_v_Adult_D30_Tcell_Spleen.wsp 
+## File location:  /Users/monhait/Desktop 
+## File name:  group1_v_group2.wsp 
 ## Workspace is open. 
 ## 
 ## Groups in Workspace
@@ -225,115 +225,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="parse-fcs-files" class="section level2">
 <h2><span class="header-section-number">3.2</span> Parse FCS files</h2>
-<p>Once this file exists as an R object, the raw FCS files are then read using the <code>parseWorkspace</code> function. This function will read the FCS files and transform, compensate, and gate according to parameters defined from the .wsp flowJo workspace. The <code>parseWorskpace</code> call requires <strong>ws</strong> (the .wsp workspace that was just read in from flowJo) and the name of the samples to read in. Other options may be customized based on particular needs. A new R object named <strong>gating_set</strong> is then created and will be a GatingSet object. The <strong>isNcdf = TRUE</strong> call saves this output to disk rather that into memory because the files are large. Here is an example of parsing FCS files.</p>
-<pre class="sourceCode r"><code class="sourceCode r">gating_set &lt;-<span class="st"> </span><span class="kw">parseWorkspace</span>(ws, <span class="dt">name =</span> <span class="st">&quot;Samples&quot;</span>, <span class="dt">path =</span> <span class="st">&quot;/Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs&quot;</span>, <span class="dt">isNcdf =</span> <span class="ot">TRUE</span>, <span class="dt">sampNloc =</span> <span class="st">&#39;sampleNode&#39;</span>)</code></pre>
-<pre><code>## Parsing 10 samples</code></pre>
+<p>Once this file exists as an R object, the raw FCS files are then read using the <code>parseWorkspace</code> function. This function will read the FCS files and transform, compensate, and gate according to parameters defined from the .wsp flowJo workspace. The <code>parseWorskpace</code> call requires <strong>ws</strong> (the .wsp workspace that was just read in from flowJo) and the name of the samples to read in. Other options may be customized based on particular needs. A new R object named <strong>gating_set</strong> is then created and will be a GatingSet object. The <strong>isNcdf = TRUE</strong> call saves this output to disk rather that into memory because the files are large. Here is an example of parsing FCS files. After this, <code>attributes()</code> is used to examine the data.</p>
+<pre class="sourceCode r"><code class="sourceCode r">gating_set &lt;-<span class="st"> </span><span class="kw">parseWorkspace</span>(ws, <span class="dt">name =</span> <span class="st">&quot;Samples&quot;</span>, <span class="dt">path =</span> <span class="st">&quot;/Users/monhait/Desktop/data/group1_v_group2&quot;</span>, <span class="dt">isNcdf =</span> <span class="ot">TRUE</span>, <span class="dt">sampNloc =</span> <span class="st">&#39;sampleNode&#39;</span>)</code></pre>
 <pre><code>## windows version of flowJo workspace recognized.
 ## version X</code></pre>
-<pre><code>## Creating ncdfFlowSet...</code></pre>
-<pre><code>## All FCS files have the same following channels:
-## Time
-## SSC-H
-## SSC-A
-## FSC-H
-## FSC-A
-## BV421-H
-## BV480-H
-## BV510-H
-## BV570-H
-## BV605-H
-## BV650-H
-## BV711-H
-## BV785-H
-## BB515-H
-## Alexa Fluor 532-H
-## PE-H
-## PE-Dazzle594-H
-## PE-Cy5-H
-## PerCP-Cy5.5-H
-## PerCP-eFluor 710-H
-## PE-Cy7-H
-## APC-H
-## APC-R700-H
-## APC-Fire 750-H
-## Zombie Nir-H
-## AF-H
-## BV421-A
-## BV480-A
-## BV510-A
-## BV570-A
-## BV605-A
-## BV650-A
-## BV711-A
-## BV785-A
-## BB515-A
-## Alexa Fluor 532-A
-## PE-A
-## PE-Dazzle594-A
-## PE-Cy5-A
-## PerCP-Cy5.5-A
-## PerCP-eFluor 710-A
-## PE-Cy7-A
-## APC-A
-## APC-R700-A
-## APC-Fire 750-A
-## Zombie Nir-A
-## AF-A</code></pre>
-<pre><code>## done!</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 2_20180823_174227_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_ADULT 2_20180823_174227_Unmixed.fcs_130445 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 3_20180823_174339_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_ADULT 3_20180823_174339_Unmixed.fcs_140448 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 4_20180823_174455_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_ADULT 4_20180823_174455_Unmixed.fcs_131634 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 5_20180823_174556_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_ADULT 5_20180823_174556_Unmixed.fcs_127923 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 1_20180823_173545_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_YOUNG 1_20180823_173545_Unmixed.fcs_138610 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 2_20180823_173649_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_YOUNG 2_20180823_173649_Unmixed.fcs_129312 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 3_20180823_173758_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_YOUNG 3_20180823_173758_Unmixed.fcs_134302 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 4_20180823_173907_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_YOUNG 4_20180823_173907_Unmixed.fcs_131867 to empty cdf slot...</code></pre>
-<pre><code>## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 5_20180823_174010_Unmixed.fcs</code></pre>
-<pre><code>## Compensating</code></pre>
-<pre><code>## gating ...</code></pre>
-<pre><code>## write SPLEEN_YOUNG 5_20180823_174010_Unmixed.fcs_125124 to empty cdf slot...</code></pre>
-<pre><code>## done!</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">attributes</span>(gating_set)</code></pre>
 </div>
 <div id="visualize-and-verify" class="section level2">
 <h2><span class="header-section-number">3.3</span> Visualize and Verify</h2>
 <p>It is helpful to now visualize both the gating template and actual gates on a subset of the data in order to verify the gating scheme. This will ensure consistency between the flowJo workspace and the manual gates recreated in R. First, save a subset of the gating_set as follows. The following saves the first FCS file of <strong>gating_set</strong> as <strong>gh</strong>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">gh &lt;-<span class="st"> </span>gating_set[[<span class="dv">1</span>]]
 <span class="kw">print</span>(gh)</code></pre>
-<pre><code>## Sample:  SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 
+<pre><code>## Sample:  X_group1_1 
 ## GatingHierarchy with  51  gates</code></pre>
 <div id="plot" class="section level3">
 <h3><span class="header-section-number">3.3.1</span> plot()</h3>
 <p>The plot() function will visualize the current gating hierarchy. This can be done for the entire gating hierarchy or a specific population as seen below.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(gh)</code></pre>
-<p><img src="bookdown_autogating_files/figure-html/manual%20hierarchy-1.png" width="672" /></p>
+<p><img src="bookdown_autogating_files/figure-html/manual_hierarchy-1.png" width="672" /></p>
 </div>
 <div id="plotgate" class="section level3">
 <h3><span class="header-section-number">3.3.2</span> plotGate()</h3>
@@ -341,7 +250,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">flowWorkspace.par.set</span>(<span class="st">&quot;plotGate&quot;</span>, <span class="kw">list</span>(<span class="dt">xlim =</span> <span class="st">&quot;data&quot;</span>,
                                        <span class="dt">ylim =</span> <span class="st">&quot;data&quot;</span>))
 <span class="kw">plotGate</span>(gh)</code></pre>
-<p><img src="bookdown_autogating_files/figure-html/visualize%20subset-1.png" width="672" /></p>
+<p><img src="bookdown_autogating_files/figure-html/visualize_subset-1.png" width="672" /></p>
 <p>**Note the use of <code>flowWorkspace.par.set()</code> here. Chapter 5 of this tutorial will discuss customizations such as this one.</p>
 </div>
 </div>

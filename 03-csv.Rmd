@@ -23,7 +23,7 @@ In the gating template, each row corresponds to a single cell population and the
 *no commas in `parent` columns (otherwise `opencyto` will assume the population has multiple parents)  
 *restrict `pop` column to quadrant-only strings (++,+)  
 
-The required 10 columns are below.  
+The required 10 columns are explained below.  
 
 ### Template Columns  
 
@@ -42,28 +42,27 @@ The required 10 columns are below.
 
 The gating template can be created manually or assisted by the use of the `templateGen()` function. `TemplateGen()` will auto-fill the `alias`, `pop`, `parent`, and `dims` columns and the rest must be completed manually. To use `templateGen()`, you must input a GatingHierarchy object. In this example, that is **gh**, the subset created from **gating_set**.  
 
-```{r template gen, warning=FALSE, message=FALSE}
+```{r template_gen, warning=FALSE, message=FALSE}
 gt <- templateGen(gh)
-print(gt)
+head(gt)
 ```
 
 The auto-filled template will generate within the R Console and can then be saved locally with the following code.  
 
-```{r save template, warning=FALSE, message=FALSE}
+```{r save_template, warning=FALSE, message=FALSE}
 write.csv(gt, "gt.csv")
 ```
 
 If you choose to create the gating template manually, the same conventions must be followed. Start with a blank spreadsheet. Next, fill in the 10 required column names. From there, use the manual gating hierarchy to fill in each cell population `alias`. Fill in the remainder accordingly.  
 
-There will likely be troubleshooting involved in this process. [This](https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html#14_gating_method_that_generates_multiple_populations) is a great place to start if you're seeking more information on the gating template.  
+There will likely be troubleshooting involved in this process. [This](https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html#14_gating_method_that_generates_multiple_populations) is a great place to start if you're seeking more information on the gating template. The `openCyto` [GitHub page](https://github.com/RGLab/openCyto) is also very responsive to issues posted.  
 
 ## Load .csv into R  
 
-When the .csv gating template is complete, it is then read into R and saved as **gt**. The gating template will be saved as a GatingTemplate object. 
+There is a sample gating template titled *partial.csv* with the sample data. This may serve as a guide to creating your own. When the .csv gating template is complete, it is then read into R and saved as **gt**. The gating template will be saved as a GatingTemplate object. 
 
-```{r read csv, eval = FALSE}
-gt <- gatingTemplate("/Users/monhait/Desktop/flow_cyto/automated_gating/data/gating_template/auto_template_1.csv",
-                     strict = FALSE, strip_extra_quotes = TRUE)
+```{r read_csv, eval = FALSE}
+gt <- gatingTemplate("/Users/monhait/Desktop/flow_cyto/automated_gating/data/gating_template/partial.csv")
 print(gt)
 ```
 

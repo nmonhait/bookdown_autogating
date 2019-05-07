@@ -26,7 +26,7 @@
 <meta name="author" content="Colorado School of Public Health, Colorado State University">
 
 
-<meta name="date" content="2019-05-01">
+<meta name="date" content="2019-05-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -197,44 +197,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="plot-automated-gating" class="section level2">
 <h2><span class="header-section-number">5.2</span> Plot Automated Gating</h2>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotGate</span>(auto_gating)</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(auto_gating)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotGate</span>(auto_gating[[<span class="dv">1</span>]])</code></pre>
+<pre><code>## Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+<pre><code>## Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+<p><img src="bookdown_autogating_files/figure-html/plot_auto_gates-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(auto_gating[[<span class="dv">1</span>]])</code></pre>
+<p><img src="bookdown_autogating_files/figure-html/plot_auto_hierarchy-1.png" width="672" /></p>
 </div>
 <div id="population-statistics" class="section level2">
 <h2><span class="header-section-number">5.3</span> Population Statistics</h2>
 <p>Both counts and frequencies can be generated for analysis. This can be generate based on the analysis completed in R, or pulled directly from flowJo. To pull from flowJo, simply at <code>flowJo=TRUE</code> to either code chunk below.</p>
 <p><strong>Counts</strong></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">getPopStats</span>(auto_gating,<span class="dt">satistic=</span><span class="st">&quot;count&quot;</span>))</code></pre>
-<pre><code>##                                                 name Population     Parent
-## 1: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158   Singlets       root
-## 2: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       Live   Singlets
-## 3: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 Leukocytes       Live
-## 4: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       CD3+ Leukocytes
-## 5: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       Cd4+       CD3+
-## 6: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 Cd4+/CD44+       Cd4+
-##     Count ParentCount
-## 1: 134378      142158
-## 2: 111695      134378
-## 3:  65104      111695
-## 4:   4781       65104
-## 5:   2151        4781
-## 6:   1760        2151</code></pre>
+<pre><code>##          name Population     Parent  Count ParentCount
+## 1: X_group1_1   Singlets       root 134378      142158
+## 2: X_group1_1       Live   Singlets 111695      134378
+## 3: X_group1_1 Leukocytes       Live  65104      111695
+## 4: X_group1_1       CD3+ Leukocytes   4781       65104
+## 5: X_group1_1       Cd4+       CD3+   2151        4781
+## 6: X_group1_1 Cd4+/CD44+       Cd4+   1760        2151</code></pre>
 <p><strong>Frequencies</strong></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">getPopStats</span>(auto_gating,<span class="dt">satistic=</span><span class="st">&quot;freq&quot;</span>))</code></pre>
-<pre><code>##                                                 name Population     Parent
-## 1: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158   Singlets       root
-## 2: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       Live   Singlets
-## 3: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 Leukocytes       Live
-## 4: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       CD3+ Leukocytes
-## 5: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       Cd4+       CD3+
-## 6: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 Cd4+/CD44+       Cd4+
-##     Count ParentCount
-## 1: 134378      142158
-## 2: 111695      134378
-## 3:  65104      111695
-## 4:   4781       65104
-## 5:   2151        4781
-## 6:   1760        2151</code></pre>
+<pre><code>##          name Population     Parent  Count ParentCount
+## 1: X_group1_1   Singlets       root 134378      142158
+## 2: X_group1_1       Live   Singlets 111695      134378
+## 3: X_group1_1 Leukocytes       Live  65104      111695
+## 4: X_group1_1       CD3+ Leukocytes   4781       65104
+## 5: X_group1_1       Cd4+       CD3+   2151        4781
+## 6: X_group1_1 Cd4+/CD44+       Cd4+   1760        2151</code></pre>
 
 </div>
 </div>

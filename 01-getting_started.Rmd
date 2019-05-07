@@ -40,6 +40,8 @@ kable(vars, align = c("c", "c", "c", "c", "c"),
 
 Before getting started, install and load the following libraries into a new R script. As you will see below, this tutorial uses the development version of `openCyto`. Use the following to ensure the correct packages are installed.  
 
+RStudio may also prompt you to download [XQuartz](https://www.xquartz.org/) and [XCode](https://developer.apple.com/xcode/), so it may be a good idea to go ahead and also download both before beginning.  
+
 *To install*  
 ```{r install, warning=FALSE, eval=FALSE, message=FALSE, echo = TRUE}
 devtools::install_github("RGLab/openCyto", ref = "trunk")

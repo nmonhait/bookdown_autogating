@@ -6,7 +6,7 @@ The flow cytometry equipment at CSU will compensate and transform the data autom
 
 At this point, you will either return to your cloned GatingSet object that contains raw FCS files or bring in new data to be gated using the same parameters. Apply **gt** to the GatingSet object, where x = **gt** and y = data to be gated.   
 
-```{r apply gt, eval = FALSE}
+```{r apply_gt, eval = FALSE}
 gating(x = gt, y = auto_gating)
 ```
 
@@ -14,11 +14,11 @@ Just as before, plot both the gating hierarchy and the automated gates. You may 
 
 ## Plot Automated Gating  
 
-```{r plot auto gates, eval = FALSE}
-plotGate(auto_gating)
+```{r plot_auto_gates}
+plotGate(auto_gating[[1]])
 ```
-```{r plot auto hierarchy, eval = FALSE}
-plot(auto_gating)
+```{r plot_auto_hierarchy}
+plot(auto_gating[[1]])
 ```
 
 ## Population Statistics  
@@ -27,13 +27,13 @@ Both counts and frequencies can be generated for analysis. This can be generate 
 
 **Counts**  
 
-```{r stats count, warning=FALSE, message=FALSE}
+```{r stats_count, warning=FALSE, message=FALSE}
 head(getPopStats(auto_gating,satistic="count"))
 ```
 
 **Frequencies**  
 
-```{r stats freq, warning=FALSE, message=FALSE}
+```{r stats_freq, warning=FALSE, message=FALSE}
 head(getPopStats(auto_gating,satistic="freq"))
 ```
 

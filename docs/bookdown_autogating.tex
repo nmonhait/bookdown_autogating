@@ -125,7 +125,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-05-01}
+    \date{2019-05-07}
 
 \usepackage{booktabs}
 
@@ -216,6 +216,8 @@ plotGate() & function to visualize gates\\
 
 Before getting started, install and load the following libraries into a new R script. As you will see below, this tutorial uses the development version of \texttt{openCyto}. Use the following to ensure the correct packages are installed.
 
+RStudio may also prompt you to download \href{https://www.xquartz.org/}{XQuartz} and \href{https://developer.apple.com/xcode/}{XCode}, so it may be a good idea to go ahead and also download both before beginning.
+
 \emph{To install}
 
 \begin{Shaded}
@@ -267,7 +269,7 @@ The first step in this process is to bring a pre-existing flowJo file into R in 
 \hypertarget{read-in-flowjo-file}{%
 \section{Read in flowJo file}\label{read-in-flowjo-file}}
 
-Within flowJo, tranformation, compensation, and gating can be saved as either .xml or .wsp filetypes. This tutorial will only detail steps from a \emph{.wsp} filetype saved from flowJo. Saving analysis within flowJo is detailed \href{http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/}{here}.
+Within flowJo, tranformation, compensation, and gating can be saved as either .xml or .wsp filetypes. This tutorial will only detail steps from a \emph{.wsp} filetype saved from flowJo. Note that many other tutorials begin from a \emph{.xml} file, which seems to cause many errors during this analysis. Saving analysis within flowJo is detailed \href{http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/}{here}.
 
 The result of step 1 will be replication of the manual transformation, compensation, and gating from the flowJo workspace saved as an R object. Before you begin, be sure you have loaded the required packages outlined in the previous chapter.
 
@@ -287,7 +289,7 @@ Once all packages are loaded, save the .wsp file path as an R object called \tex
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{wsfile <-}\StringTok{ "/Users/monhait/Desktop/flow_cyto/automated_gating/data/Young_v_Adult_D30_Tcell_Spleen.wsp"}
+\NormalTok{wsfile <-}\StringTok{ "/Users/monhait/Desktop/group1_v_group2.wsp"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -305,8 +307,8 @@ Once all packages are loaded, save the .wsp file path as an R object called \tex
 
 \begin{verbatim}
 ## FlowJo Workspace Version  20.0 
-## File location:  /Users/monhait/Desktop/flow_cyto/automated_gating/data 
-## File name:  Young_v_Adult_D30_Tcell_Spleen.wsp 
+## File location:  /Users/monhait/Desktop 
+## File name:  group1_v_group2.wsp 
 ## Workspace is open. 
 ## 
 ## Groups in Workspace
@@ -318,245 +320,24 @@ Once all packages are loaded, save the .wsp file path as an R object called \tex
 \hypertarget{parse-fcs-files}{%
 \section{Parse FCS files}\label{parse-fcs-files}}
 
-Once this file exists as an R object, the raw FCS files are then read using the \texttt{parseWorkspace} function. This function will read the FCS files and transform, compensate, and gate according to parameters defined from the .wsp flowJo workspace. The \texttt{parseWorskpace} call requires \textbf{ws} (the .wsp workspace that was just read in from flowJo) and the name of the samples to read in. Other options may be customized based on particular needs. A new R object named \textbf{gating\_set} is then created and will be a GatingSet object. The \textbf{isNcdf = TRUE} call saves this output to disk rather that into memory because the files are large. Here is an example of parsing FCS files.
+Once this file exists as an R object, the raw FCS files are then read using the \texttt{parseWorkspace} function. This function will read the FCS files and transform, compensate, and gate according to parameters defined from the .wsp flowJo workspace. The \texttt{parseWorskpace} call requires \textbf{ws} (the .wsp workspace that was just read in from flowJo) and the name of the samples to read in. Other options may be customized based on particular needs. A new R object named \textbf{gating\_set} is then created and will be a GatingSet object. The \textbf{isNcdf = TRUE} call saves this output to disk rather that into memory because the files are large. Here is an example of parsing FCS files. After this, \texttt{attributes()} is used to examine the data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gating_set <-}\StringTok{ }\KeywordTok{parseWorkspace}\NormalTok{(ws, }\DataTypeTok{name =} \StringTok{"Samples"}\NormalTok{, }\DataTypeTok{path =} \StringTok{"/Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs"}\NormalTok{, }\DataTypeTok{isNcdf =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sampNloc =} \StringTok{'sampleNode'}\NormalTok{)}
+\NormalTok{gating_set <-}\StringTok{ }\KeywordTok{parseWorkspace}\NormalTok{(ws, }\DataTypeTok{name =} \StringTok{"Samples"}\NormalTok{, }\DataTypeTok{path =} \StringTok{"/Users/monhait/Desktop/data/group1_v_group2"}\NormalTok{, }\DataTypeTok{isNcdf =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sampNloc =} \StringTok{'sampleNode'}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## Parsing 10 samples
-\end{verbatim}
 
 \begin{verbatim}
 ## windows version of flowJo workspace recognized.
 ## version X
 \end{verbatim}
 
-\begin{verbatim}
-## Creating ncdfFlowSet...
-\end{verbatim}
-
-\begin{verbatim}
-## All FCS files have the same following channels:
-## Time
-## SSC-H
-## SSC-A
-## FSC-H
-## FSC-A
-## BV421-H
-## BV480-H
-## BV510-H
-## BV570-H
-## BV605-H
-## BV650-H
-## BV711-H
-## BV785-H
-## BB515-H
-## Alexa Fluor 532-H
-## PE-H
-## PE-Dazzle594-H
-## PE-Cy5-H
-## PerCP-Cy5.5-H
-## PerCP-eFluor 710-H
-## PE-Cy7-H
-## APC-H
-## APC-R700-H
-## APC-Fire 750-H
-## Zombie Nir-H
-## AF-H
-## BV421-A
-## BV480-A
-## BV510-A
-## BV570-A
-## BV605-A
-## BV650-A
-## BV711-A
-## BV785-A
-## BB515-A
-## Alexa Fluor 532-A
-## PE-A
-## PE-Dazzle594-A
-## PE-Cy5-A
-## PerCP-Cy5.5-A
-## PerCP-eFluor 710-A
-## PE-Cy7-A
-## APC-A
-## APC-R700-A
-## APC-Fire 750-A
-## Zombie Nir-A
-## AF-A
-\end{verbatim}
-
-\begin{verbatim}
-## done!
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 2_20180823_174227_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_ADULT 2_20180823_174227_Unmixed.fcs_130445 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 3_20180823_174339_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_ADULT 3_20180823_174339_Unmixed.fcs_140448 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 4_20180823_174455_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_ADULT 4_20180823_174455_Unmixed.fcs_131634 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_ADULT 5_20180823_174556_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_ADULT 5_20180823_174556_Unmixed.fcs_127923 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 1_20180823_173545_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_YOUNG 1_20180823_173545_Unmixed.fcs_138610 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 2_20180823_173649_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_YOUNG 2_20180823_173649_Unmixed.fcs_129312 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 3_20180823_173758_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_YOUNG 3_20180823_173758_Unmixed.fcs_134302 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 4_20180823_173907_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_YOUNG 4_20180823_173907_Unmixed.fcs_131867 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## loading data: /Users/monhait/Desktop/flow_cyto/automated_gating/data/fcs/SPLEEN_YOUNG 5_20180823_174010_Unmixed.fcs
-\end{verbatim}
-
-\begin{verbatim}
-## Compensating
-\end{verbatim}
-
-\begin{verbatim}
-## gating ...
-\end{verbatim}
-
-\begin{verbatim}
-## write SPLEEN_YOUNG 5_20180823_174010_Unmixed.fcs_125124 to empty cdf slot...
-\end{verbatim}
-
-\begin{verbatim}
-## done!
-\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{attributes}\NormalTok{(gating_set)}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{visualize-and-verify}{%
 \section{Visualize and Verify}\label{visualize-and-verify}}
@@ -571,7 +352,7 @@ It is helpful to now visualize both the gating template and actual gates on a su
 \end{Shaded}
 
 \begin{verbatim}
-## Sample:  SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 
+## Sample:  X_group1_1 
 ## GatingHierarchy with  51  gates
 \end{verbatim}
 
@@ -586,7 +367,7 @@ The plot() function will visualize the current gating hierarchy. This can be don
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown_autogating_files/figure-latex/manual hierarchy-1.pdf}
+\includegraphics{bookdown_autogating_files/figure-latex/manual_hierarchy-1.pdf}
 
 \hypertarget{plotgate}{%
 \subsection{plotGate()}\label{plotgate}}
@@ -601,7 +382,7 @@ The plotGate() function will gate the designated subset of your data according t
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown_autogating_files/figure-latex/visualize subset-1.pdf}
+\includegraphics{bookdown_autogating_files/figure-latex/visualize_subset-1.pdf}
 
 **Note the use of \texttt{flowWorkspace.par.set()} here. Chapter 5 of this tutorial will discuss customizations such as this one.
 
@@ -648,7 +429,7 @@ In the gating template, each row corresponds to a single cell population and the
 }no commas in \texttt{parent} columns (otherwise \texttt{opencyto} will assume the population has multiple parents)\\
 *restrict \texttt{pop} column to quadrant-only strings (++,+)
 
-The required 10 columns are below.
+The required 10 columns are explained below.
 
 \hypertarget{template-columns}{%
 \subsection{Template Columns}\label{template-columns}}
@@ -672,215 +453,32 @@ The gating template can be created manually or assisted by the use of the \textt
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{gt <-}\StringTok{ }\KeywordTok{templateGen}\NormalTok{(gh)}
-\KeywordTok{print}\NormalTok{(gt)}
+\KeywordTok{head}\NormalTok{(gt)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##                  alias                 pop
-## 1             Singlets            Singlets
-## 2                 Live                Live
-## 3           Leukocytes          Leukocytes
-## 4                 CD3+                CD3+
-## 5                 CD8+                CD8+
-## 6               CXCR1-              CXCR1-
-## 7               CXCR1+              CXCR1+
-## 8               CTLA4-              CTLA4-
-## 9               CTLA4+              CTLA4+
-## 10              CD153-              CD153-
-## 11              CD153+              CD153+
-## 12               CD44-               CD44-
-## 13 Q12: CD27- , CD153- Q12: CD27- , CD153-
-## 14 Q11: CD27+ , CD153- Q11: CD27+ , CD153-
-## 15 Q10: CD27+ , CD153+ Q10: CD27+ , CD153+
-## 16  Q9: CD27- , CD153+  Q9: CD27- , CD153+
-## 17 Q8: CXCR3- , CXCR5- Q8: CXCR3- , CXCR5-
-## 18 Q7: CXCR3+ , CXCR5- Q7: CXCR3+ , CXCR5-
-## 19 Q6: CXCR3+ , CXCR5+ Q6: CXCR3+ , CXCR5+
-## 20 Q5: CXCR3- , CXCR5+ Q5: CXCR3- , CXCR5+
-## 21  Q4: CD122- , SCA1-  Q4: CD122- , SCA1-
-## 22  Q3: CD122+ , SCA1-  Q3: CD122+ , SCA1-
-## 23  Q2: CD122+ , SCA1+  Q2: CD122+ , SCA1+
-## 24  Q1: CD122- , SCA1+  Q1: CD122- , SCA1+
-## 25               CD44+               CD44+
-## 26              CD62L-              CD62L-
-## 27              CD62L+              CD62L+
-## 28                Cd4+                Cd4+
-## 29              CXCR1-              CXCR1-
-## 30              CXCR1+              CXCR1+
-## 31              CTLA4-              CTLA4-
-## 32              CTLA4+              CTLA4+
-## 33              CD153-              CD153-
-## 34              CD153+              CD153+
-## 35               CD44-               CD44-
-## 36 Q12: CD27- , CD153- Q12: CD27- , CD153-
-## 37 Q11: CD27+ , CD153- Q11: CD27+ , CD153-
-## 38 Q10: CD27+ , CD153+ Q10: CD27+ , CD153+
-## 39  Q9: CD27- , CD153+  Q9: CD27- , CD153+
-## 40 Q8: CXCR3- , CXCR5- Q8: CXCR3- , CXCR5-
-## 41 Q7: CXCR3+ , CXCR5- Q7: CXCR3+ , CXCR5-
-## 42 Q6: CXCR3+ , CXCR5+ Q6: CXCR3+ , CXCR5+
-## 43 Q5: CXCR3- , CXCR5+ Q5: CXCR3- , CXCR5+
-## 44  Q4: CD122- , SCA1-  Q4: CD122- , SCA1-
-## 45  Q3: CD122+ , SCA1-  Q3: CD122+ , SCA1-
-## 46  Q2: CD122+ , SCA1+  Q2: CD122+ , SCA1+
-## 47  Q1: CD122- , SCA1+  Q1: CD122- , SCA1+
-## 48               CD44+               CD44+
-## 49              CD62L-              CD62L-
-## 50              CD62L+              CD62L+
-##                                       parent
-## 1                                       root
-## 2                                  /Singlets
-## 3                             /Singlets/Live
-## 4                  /Singlets/Live/Leukocytes
-## 5             /Singlets/Live/Leukocytes/CD3+
-## 6        /Singlets/Live/Leukocytes/CD3+/CD8+
-## 7        /Singlets/Live/Leukocytes/CD3+/CD8+
-## 8        /Singlets/Live/Leukocytes/CD3+/CD8+
-## 9        /Singlets/Live/Leukocytes/CD3+/CD8+
-## 10       /Singlets/Live/Leukocytes/CD3+/CD8+
-## 11       /Singlets/Live/Leukocytes/CD3+/CD8+
-## 12       /Singlets/Live/Leukocytes/CD3+/CD8+
-## 13 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 14 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 15 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 16 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 17 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 18 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 19 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 20 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 21 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 22 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 23 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 24 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 25       /Singlets/Live/Leukocytes/CD3+/CD8+
-## 26 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44+
-## 27 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44+
-## 28            /Singlets/Live/Leukocytes/CD3+
-## 29       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 30       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 31       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 32       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 33       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 34       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 35       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 36 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 37 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 38 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 39 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 40 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 41 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 42 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 43 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 44 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 45 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 46 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 47 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 48       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 49 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44+
-## 50 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44+
-##                                  dims gating_method gating_args
-## 1                         FSC-A,FSC-H          <NA>        <NA>
-## 2                   Comp-Zombie Nir-A          <NA>        <NA>
-## 3                         FSC-A,SSC-A          <NA>        <NA>
-## 4        Comp-Alexa Fluor 532-A,SSC-H          <NA>        <NA>
-## 5                  Comp-BV570-A,SSC-H          <NA>        <NA>
-## 6                           Comp-PE-A          <NA>        <NA>
-## 7                           Comp-PE-A          <NA>        <NA>
-## 8                        Comp-BV605-A          <NA>        <NA>
-## 9                        Comp-BV605-A          <NA>        <NA>
-## 10                       Comp-BV711-A          <NA>        <NA>
-## 11                       Comp-BV711-A          <NA>        <NA>
-## 12                Comp-APC-Fire 750-A          <NA>        <NA>
-## 13          Comp-BV650-A,Comp-BV711-A          <NA>        <NA>
-## 14          Comp-BV650-A,Comp-BV711-A          <NA>        <NA>
-## 15          Comp-BV650-A,Comp-BV711-A          <NA>        <NA>
-## 16          Comp-BV650-A,Comp-BV711-A          <NA>        <NA>
-## 17 Comp-APC-A,Comp-PerCP-eFluor 710-A          <NA>        <NA>
-## 18 Comp-APC-A,Comp-PerCP-eFluor 710-A          <NA>        <NA>
-## 19 Comp-APC-A,Comp-PerCP-eFluor 710-A          <NA>        <NA>
-## 20 Comp-APC-A,Comp-PerCP-eFluor 710-A          <NA>        <NA>
-## 21         Comp-PE-Cy5-A,Comp-BB515-A          <NA>        <NA>
-## 22         Comp-PE-Cy5-A,Comp-BB515-A          <NA>        <NA>
-## 23         Comp-PE-Cy5-A,Comp-BB515-A          <NA>        <NA>
-## 24         Comp-PE-Cy5-A,Comp-BB515-A          <NA>        <NA>
-## 25                Comp-APC-Fire 750-A          <NA>        <NA>
-## 26                Comp-PE-Dazzle594-A          <NA>        <NA>
-## 27                Comp-PE-Dazzle594-A          <NA>        <NA>
-## 28                 Comp-BV480-A,SSC-H          <NA>        <NA>
-## 29                          Comp-PE-A          <NA>        <NA>
-## 30                          Comp-PE-A          <NA>        <NA>
-## 31                       Comp-BV605-A          <NA>        <NA>
-## 32                       Comp-BV605-A          <NA>        <NA>
-## 33                       Comp-BV711-A          <NA>        <NA>
-## 34                       Comp-BV711-A          <NA>        <NA>
-## 35                Comp-APC-Fire 750-A          <NA>        <NA>
-## 36          Comp-BV650-A,Comp-BV711-A          <NA>        <NA>
-## 37          Comp-BV650-A,Comp-BV711-A          <NA>        <NA>
-## 38          Comp-BV650-A,Comp-BV711-A          <NA>        <NA>
-## 39          Comp-BV650-A,Comp-BV711-A          <NA>        <NA>
-## 40 Comp-APC-A,Comp-PerCP-eFluor 710-A          <NA>        <NA>
-## 41 Comp-APC-A,Comp-PerCP-eFluor 710-A          <NA>        <NA>
-## 42 Comp-APC-A,Comp-PerCP-eFluor 710-A          <NA>        <NA>
-## 43 Comp-APC-A,Comp-PerCP-eFluor 710-A          <NA>        <NA>
-## 44         Comp-PE-Cy5-A,Comp-BB515-A          <NA>        <NA>
-## 45         Comp-PE-Cy5-A,Comp-BB515-A          <NA>        <NA>
-## 46         Comp-PE-Cy5-A,Comp-BB515-A          <NA>        <NA>
-## 47         Comp-PE-Cy5-A,Comp-BB515-A          <NA>        <NA>
-## 48                Comp-APC-Fire 750-A          <NA>        <NA>
-## 49                Comp-PE-Dazzle594-A          <NA>        <NA>
-## 50                Comp-PE-Dazzle594-A          <NA>        <NA>
-##    collapseDataForGating groupBy preprocessing_method preprocessing_args
-## 1                   <NA>    <NA>                 <NA>               <NA>
-## 2                   <NA>    <NA>                 <NA>               <NA>
-## 3                   <NA>    <NA>                 <NA>               <NA>
-## 4                   <NA>    <NA>                 <NA>               <NA>
-## 5                   <NA>    <NA>                 <NA>               <NA>
-## 6                   <NA>    <NA>                 <NA>               <NA>
-## 7                   <NA>    <NA>                 <NA>               <NA>
-## 8                   <NA>    <NA>                 <NA>               <NA>
-## 9                   <NA>    <NA>                 <NA>               <NA>
-## 10                  <NA>    <NA>                 <NA>               <NA>
-## 11                  <NA>    <NA>                 <NA>               <NA>
-## 12                  <NA>    <NA>                 <NA>               <NA>
-## 13                  <NA>    <NA>                 <NA>               <NA>
-## 14                  <NA>    <NA>                 <NA>               <NA>
-## 15                  <NA>    <NA>                 <NA>               <NA>
-## 16                  <NA>    <NA>                 <NA>               <NA>
-## 17                  <NA>    <NA>                 <NA>               <NA>
-## 18                  <NA>    <NA>                 <NA>               <NA>
-## 19                  <NA>    <NA>                 <NA>               <NA>
-## 20                  <NA>    <NA>                 <NA>               <NA>
-## 21                  <NA>    <NA>                 <NA>               <NA>
-## 22                  <NA>    <NA>                 <NA>               <NA>
-## 23                  <NA>    <NA>                 <NA>               <NA>
-## 24                  <NA>    <NA>                 <NA>               <NA>
-## 25                  <NA>    <NA>                 <NA>               <NA>
-## 26                  <NA>    <NA>                 <NA>               <NA>
-## 27                  <NA>    <NA>                 <NA>               <NA>
-## 28                  <NA>    <NA>                 <NA>               <NA>
-## 29                  <NA>    <NA>                 <NA>               <NA>
-## 30                  <NA>    <NA>                 <NA>               <NA>
-## 31                  <NA>    <NA>                 <NA>               <NA>
-## 32                  <NA>    <NA>                 <NA>               <NA>
-## 33                  <NA>    <NA>                 <NA>               <NA>
-## 34                  <NA>    <NA>                 <NA>               <NA>
-## 35                  <NA>    <NA>                 <NA>               <NA>
-## 36                  <NA>    <NA>                 <NA>               <NA>
-## 37                  <NA>    <NA>                 <NA>               <NA>
-## 38                  <NA>    <NA>                 <NA>               <NA>
-## 39                  <NA>    <NA>                 <NA>               <NA>
-## 40                  <NA>    <NA>                 <NA>               <NA>
-## 41                  <NA>    <NA>                 <NA>               <NA>
-## 42                  <NA>    <NA>                 <NA>               <NA>
-## 43                  <NA>    <NA>                 <NA>               <NA>
-## 44                  <NA>    <NA>                 <NA>               <NA>
-## 45                  <NA>    <NA>                 <NA>               <NA>
-## 46                  <NA>    <NA>                 <NA>               <NA>
-## 47                  <NA>    <NA>                 <NA>               <NA>
-## 48                  <NA>    <NA>                 <NA>               <NA>
-## 49                  <NA>    <NA>                 <NA>               <NA>
-## 50                  <NA>    <NA>                 <NA>               <NA>
+##        alias        pop                              parent
+## 1   Singlets   Singlets                                root
+## 2       Live       Live                           /Singlets
+## 3 Leukocytes Leukocytes                      /Singlets/Live
+## 4       CD3+       CD3+           /Singlets/Live/Leukocytes
+## 5       CD8+       CD8+      /Singlets/Live/Leukocytes/CD3+
+## 6     CXCR1-     CXCR1- /Singlets/Live/Leukocytes/CD3+/CD8+
+##                           dims gating_method gating_args
+## 1                  FSC-A,FSC-H          <NA>        <NA>
+## 2            Comp-Zombie Nir-A          <NA>        <NA>
+## 3                  FSC-A,SSC-A          <NA>        <NA>
+## 4 Comp-Alexa Fluor 532-A,SSC-H          <NA>        <NA>
+## 5           Comp-BV570-A,SSC-H          <NA>        <NA>
+## 6                    Comp-PE-A          <NA>        <NA>
+##   collapseDataForGating groupBy preprocessing_method preprocessing_args
+## 1                  <NA>    <NA>                 <NA>               <NA>
+## 2                  <NA>    <NA>                 <NA>               <NA>
+## 3                  <NA>    <NA>                 <NA>               <NA>
+## 4                  <NA>    <NA>                 <NA>               <NA>
+## 5                  <NA>    <NA>                 <NA>               <NA>
+## 6                  <NA>    <NA>                 <NA>               <NA>
 \end{verbatim}
 
 The auto-filled template will generate within the R Console and can then be saved locally with the following code.
@@ -893,17 +491,16 @@ The auto-filled template will generate within the R Console and can then be save
 
 If you choose to create the gating template manually, the same conventions must be followed. Start with a blank spreadsheet. Next, fill in the 10 required column names. From there, use the manual gating hierarchy to fill in each cell population \texttt{alias}. Fill in the remainder accordingly.
 
-There will likely be troubleshooting involved in this process. \href{https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html\#14_gating_method_that_generates_multiple_populations}{This} is a great place to start if you're seeking more information on the gating template.
+There will likely be troubleshooting involved in this process. \href{https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html\#14_gating_method_that_generates_multiple_populations}{This} is a great place to start if you're seeking more information on the gating template. The \texttt{openCyto} \href{https://github.com/RGLab/openCyto}{GitHub page} is also very responsive to issues posted.
 
 \hypertarget{load-.csv-into-r}{%
 \section{Load .csv into R}\label{load-.csv-into-r}}
 
-When the .csv gating template is complete, it is then read into R and saved as \textbf{gt}. The gating template will be saved as a GatingTemplate object.
+There is a sample gating template titled \emph{partial.csv} with the sample data. This may serve as a guide to creating your own. When the .csv gating template is complete, it is then read into R and saved as \textbf{gt}. The gating template will be saved as a GatingTemplate object.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gt <-}\StringTok{ }\KeywordTok{gatingTemplate}\NormalTok{(}\StringTok{"/Users/monhait/Desktop/flow_cyto/automated_gating/data/gating_template/auto_template_1.csv"}\NormalTok{,}
-                     \DataTypeTok{strict =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{strip_extra_quotes =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{gt <-}\StringTok{ }\KeywordTok{gatingTemplate}\NormalTok{(}\StringTok{"/Users/monhait/Desktop/flow_cyto/automated_gating/data/gating_template/partial.csv"}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(gt)}
 \end{Highlighting}
 \end{Shaded}
@@ -931,15 +528,27 @@ Just as before, plot both the gating hierarchy and the automated gates. You may 
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plotGate}\NormalTok{(auto_gating)}
+\KeywordTok{plotGate}\NormalTok{(auto_gating[[}\DecValTok{1}\NormalTok{]])}
 \end{Highlighting}
 \end{Shaded}
 
+\begin{verbatim}
+## Warning in min(x): no non-missing arguments to min; returning Inf
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in max(x): no non-missing arguments to max; returning -Inf
+\end{verbatim}
+
+\includegraphics{bookdown_autogating_files/figure-latex/plot_auto_gates-1.pdf}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(auto_gating)}
+\KeywordTok{plot}\NormalTok{(auto_gating[[}\DecValTok{1}\NormalTok{]])}
 \end{Highlighting}
 \end{Shaded}
+
+\includegraphics{bookdown_autogating_files/figure-latex/plot_auto_hierarchy-1.pdf}
 
 \hypertarget{population-statistics}{%
 \section{Population Statistics}\label{population-statistics}}
@@ -955,20 +564,13 @@ Both counts and frequencies can be generated for analysis. This can be generate 
 \end{Shaded}
 
 \begin{verbatim}
-##                                                 name Population     Parent
-## 1: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158   Singlets       root
-## 2: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       Live   Singlets
-## 3: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 Leukocytes       Live
-## 4: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       CD3+ Leukocytes
-## 5: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       Cd4+       CD3+
-## 6: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 Cd4+/CD44+       Cd4+
-##     Count ParentCount
-## 1: 134378      142158
-## 2: 111695      134378
-## 3:  65104      111695
-## 4:   4781       65104
-## 5:   2151        4781
-## 6:   1760        2151
+##          name Population     Parent  Count ParentCount
+## 1: X_group1_1   Singlets       root 134378      142158
+## 2: X_group1_1       Live   Singlets 111695      134378
+## 3: X_group1_1 Leukocytes       Live  65104      111695
+## 4: X_group1_1       CD3+ Leukocytes   4781       65104
+## 5: X_group1_1       Cd4+       CD3+   2151        4781
+## 6: X_group1_1 Cd4+/CD44+       Cd4+   1760        2151
 \end{verbatim}
 
 \textbf{Frequencies}
@@ -980,20 +582,13 @@ Both counts and frequencies can be generated for analysis. This can be generate 
 \end{Shaded}
 
 \begin{verbatim}
-##                                                 name Population     Parent
-## 1: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158   Singlets       root
-## 2: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       Live   Singlets
-## 3: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 Leukocytes       Live
-## 4: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       CD3+ Leukocytes
-## 5: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158       Cd4+       CD3+
-## 6: SPLEEN_ADULT 1_20180823_174115_Unmixed.fcs_142158 Cd4+/CD44+       Cd4+
-##     Count ParentCount
-## 1: 134378      142158
-## 2: 111695      134378
-## 3:  65104      111695
-## 4:   4781       65104
-## 5:   2151        4781
-## 6:   1760        2151
+##          name Population     Parent  Count ParentCount
+## 1: X_group1_1   Singlets       root 134378      142158
+## 2: X_group1_1       Live   Singlets 111695      134378
+## 3: X_group1_1 Leukocytes       Live  65104      111695
+## 4: X_group1_1       CD3+ Leukocytes   4781       65104
+## 5: X_group1_1       Cd4+       CD3+   2151        4781
+## 6: X_group1_1 Cd4+/CD44+       Cd4+   1760        2151
 \end{verbatim}
 
 \hypertarget{customization}{%

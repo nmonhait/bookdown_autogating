@@ -26,7 +26,7 @@
 <meta name="author" content="Colorado School of Public Health, Colorado State University">
 
 
-<meta name="date" content="2019-05-01">
+<meta name="date" content="2019-05-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -207,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><em>unique idenitifer for <code>alias</code> and <code>parent</code> columns<br />
 </em>no commas in <code>parent</code> columns (otherwise <code>opencyto</code> will assume the population has multiple parents)<br />
 *restrict <code>pop</code> column to quadrant-only strings (++,+)</p>
-<p>The required 10 columns are below.</p>
+<p>The required 10 columns are explained below.</p>
 <div id="template-columns" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Template Columns</h3>
 <p><code>alias</code>- unique name/identifier for cell population<br />
@@ -226,221 +226,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.2</span> Creating the Template</h2>
 <p>The gating template can be created manually or assisted by the use of the <code>templateGen()</code> function. <code>TemplateGen()</code> will auto-fill the <code>alias</code>, <code>pop</code>, <code>parent</code>, and <code>dims</code> columns and the rest must be completed manually. To use <code>templateGen()</code>, you must input a GatingHierarchy object. In this example, that is <strong>gh</strong>, the subset created from <strong>gating_set</strong>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">gt &lt;-<span class="st"> </span><span class="kw">templateGen</span>(gh)
-<span class="kw">print</span>(gt)</code></pre>
-<pre><code>##                  alias                 pop
-## 1             Singlets            Singlets
-## 2                 Live                Live
-## 3           Leukocytes          Leukocytes
-## 4                 CD3+                CD3+
-## 5                 CD8+                CD8+
-## 6               CXCR1-              CXCR1-
-## 7               CXCR1+              CXCR1+
-## 8               CTLA4-              CTLA4-
-## 9               CTLA4+              CTLA4+
-## 10              CD153-              CD153-
-## 11              CD153+              CD153+
-## 12               CD44-               CD44-
-## 13 Q12: CD27- , CD153- Q12: CD27- , CD153-
-## 14 Q11: CD27+ , CD153- Q11: CD27+ , CD153-
-## 15 Q10: CD27+ , CD153+ Q10: CD27+ , CD153+
-## 16  Q9: CD27- , CD153+  Q9: CD27- , CD153+
-## 17 Q8: CXCR3- , CXCR5- Q8: CXCR3- , CXCR5-
-## 18 Q7: CXCR3+ , CXCR5- Q7: CXCR3+ , CXCR5-
-## 19 Q6: CXCR3+ , CXCR5+ Q6: CXCR3+ , CXCR5+
-## 20 Q5: CXCR3- , CXCR5+ Q5: CXCR3- , CXCR5+
-## 21  Q4: CD122- , SCA1-  Q4: CD122- , SCA1-
-## 22  Q3: CD122+ , SCA1-  Q3: CD122+ , SCA1-
-## 23  Q2: CD122+ , SCA1+  Q2: CD122+ , SCA1+
-## 24  Q1: CD122- , SCA1+  Q1: CD122- , SCA1+
-## 25               CD44+               CD44+
-## 26              CD62L-              CD62L-
-## 27              CD62L+              CD62L+
-## 28                Cd4+                Cd4+
-## 29              CXCR1-              CXCR1-
-## 30              CXCR1+              CXCR1+
-## 31              CTLA4-              CTLA4-
-## 32              CTLA4+              CTLA4+
-## 33              CD153-              CD153-
-## 34              CD153+              CD153+
-## 35               CD44-               CD44-
-## 36 Q12: CD27- , CD153- Q12: CD27- , CD153-
-## 37 Q11: CD27+ , CD153- Q11: CD27+ , CD153-
-## 38 Q10: CD27+ , CD153+ Q10: CD27+ , CD153+
-## 39  Q9: CD27- , CD153+  Q9: CD27- , CD153+
-## 40 Q8: CXCR3- , CXCR5- Q8: CXCR3- , CXCR5-
-## 41 Q7: CXCR3+ , CXCR5- Q7: CXCR3+ , CXCR5-
-## 42 Q6: CXCR3+ , CXCR5+ Q6: CXCR3+ , CXCR5+
-## 43 Q5: CXCR3- , CXCR5+ Q5: CXCR3- , CXCR5+
-## 44  Q4: CD122- , SCA1-  Q4: CD122- , SCA1-
-## 45  Q3: CD122+ , SCA1-  Q3: CD122+ , SCA1-
-## 46  Q2: CD122+ , SCA1+  Q2: CD122+ , SCA1+
-## 47  Q1: CD122- , SCA1+  Q1: CD122- , SCA1+
-## 48               CD44+               CD44+
-## 49              CD62L-              CD62L-
-## 50              CD62L+              CD62L+
-##                                       parent
-## 1                                       root
-## 2                                  /Singlets
-## 3                             /Singlets/Live
-## 4                  /Singlets/Live/Leukocytes
-## 5             /Singlets/Live/Leukocytes/CD3+
-## 6        /Singlets/Live/Leukocytes/CD3+/CD8+
-## 7        /Singlets/Live/Leukocytes/CD3+/CD8+
-## 8        /Singlets/Live/Leukocytes/CD3+/CD8+
-## 9        /Singlets/Live/Leukocytes/CD3+/CD8+
-## 10       /Singlets/Live/Leukocytes/CD3+/CD8+
-## 11       /Singlets/Live/Leukocytes/CD3+/CD8+
-## 12       /Singlets/Live/Leukocytes/CD3+/CD8+
-## 13 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 14 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 15 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 16 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 17 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 18 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 19 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 20 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 21 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 22 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 23 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 24 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44-
-## 25       /Singlets/Live/Leukocytes/CD3+/CD8+
-## 26 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44+
-## 27 /Singlets/Live/Leukocytes/CD3+/CD8+/CD44+
-## 28            /Singlets/Live/Leukocytes/CD3+
-## 29       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 30       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 31       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 32       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 33       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 34       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 35       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 36 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 37 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 38 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 39 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 40 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 41 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 42 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 43 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 44 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 45 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 46 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 47 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44-
-## 48       /Singlets/Live/Leukocytes/CD3+/Cd4+
-## 49 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44+
-## 50 /Singlets/Live/Leukocytes/CD3+/Cd4+/CD44+
-##                                  dims gating_method gating_args
-## 1                         FSC-A,FSC-H          &lt;NA&gt;        &lt;NA&gt;
-## 2                   Comp-Zombie Nir-A          &lt;NA&gt;        &lt;NA&gt;
-## 3                         FSC-A,SSC-A          &lt;NA&gt;        &lt;NA&gt;
-## 4        Comp-Alexa Fluor 532-A,SSC-H          &lt;NA&gt;        &lt;NA&gt;
-## 5                  Comp-BV570-A,SSC-H          &lt;NA&gt;        &lt;NA&gt;
-## 6                           Comp-PE-A          &lt;NA&gt;        &lt;NA&gt;
-## 7                           Comp-PE-A          &lt;NA&gt;        &lt;NA&gt;
-## 8                        Comp-BV605-A          &lt;NA&gt;        &lt;NA&gt;
-## 9                        Comp-BV605-A          &lt;NA&gt;        &lt;NA&gt;
-## 10                       Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 11                       Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 12                Comp-APC-Fire 750-A          &lt;NA&gt;        &lt;NA&gt;
-## 13          Comp-BV650-A,Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 14          Comp-BV650-A,Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 15          Comp-BV650-A,Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 16          Comp-BV650-A,Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 17 Comp-APC-A,Comp-PerCP-eFluor 710-A          &lt;NA&gt;        &lt;NA&gt;
-## 18 Comp-APC-A,Comp-PerCP-eFluor 710-A          &lt;NA&gt;        &lt;NA&gt;
-## 19 Comp-APC-A,Comp-PerCP-eFluor 710-A          &lt;NA&gt;        &lt;NA&gt;
-## 20 Comp-APC-A,Comp-PerCP-eFluor 710-A          &lt;NA&gt;        &lt;NA&gt;
-## 21         Comp-PE-Cy5-A,Comp-BB515-A          &lt;NA&gt;        &lt;NA&gt;
-## 22         Comp-PE-Cy5-A,Comp-BB515-A          &lt;NA&gt;        &lt;NA&gt;
-## 23         Comp-PE-Cy5-A,Comp-BB515-A          &lt;NA&gt;        &lt;NA&gt;
-## 24         Comp-PE-Cy5-A,Comp-BB515-A          &lt;NA&gt;        &lt;NA&gt;
-## 25                Comp-APC-Fire 750-A          &lt;NA&gt;        &lt;NA&gt;
-## 26                Comp-PE-Dazzle594-A          &lt;NA&gt;        &lt;NA&gt;
-## 27                Comp-PE-Dazzle594-A          &lt;NA&gt;        &lt;NA&gt;
-## 28                 Comp-BV480-A,SSC-H          &lt;NA&gt;        &lt;NA&gt;
-## 29                          Comp-PE-A          &lt;NA&gt;        &lt;NA&gt;
-## 30                          Comp-PE-A          &lt;NA&gt;        &lt;NA&gt;
-## 31                       Comp-BV605-A          &lt;NA&gt;        &lt;NA&gt;
-## 32                       Comp-BV605-A          &lt;NA&gt;        &lt;NA&gt;
-## 33                       Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 34                       Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 35                Comp-APC-Fire 750-A          &lt;NA&gt;        &lt;NA&gt;
-## 36          Comp-BV650-A,Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 37          Comp-BV650-A,Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 38          Comp-BV650-A,Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 39          Comp-BV650-A,Comp-BV711-A          &lt;NA&gt;        &lt;NA&gt;
-## 40 Comp-APC-A,Comp-PerCP-eFluor 710-A          &lt;NA&gt;        &lt;NA&gt;
-## 41 Comp-APC-A,Comp-PerCP-eFluor 710-A          &lt;NA&gt;        &lt;NA&gt;
-## 42 Comp-APC-A,Comp-PerCP-eFluor 710-A          &lt;NA&gt;        &lt;NA&gt;
-## 43 Comp-APC-A,Comp-PerCP-eFluor 710-A          &lt;NA&gt;        &lt;NA&gt;
-## 44         Comp-PE-Cy5-A,Comp-BB515-A          &lt;NA&gt;        &lt;NA&gt;
-## 45         Comp-PE-Cy5-A,Comp-BB515-A          &lt;NA&gt;        &lt;NA&gt;
-## 46         Comp-PE-Cy5-A,Comp-BB515-A          &lt;NA&gt;        &lt;NA&gt;
-## 47         Comp-PE-Cy5-A,Comp-BB515-A          &lt;NA&gt;        &lt;NA&gt;
-## 48                Comp-APC-Fire 750-A          &lt;NA&gt;        &lt;NA&gt;
-## 49                Comp-PE-Dazzle594-A          &lt;NA&gt;        &lt;NA&gt;
-## 50                Comp-PE-Dazzle594-A          &lt;NA&gt;        &lt;NA&gt;
-##    collapseDataForGating groupBy preprocessing_method preprocessing_args
-## 1                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 2                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 3                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 4                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 5                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 6                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 7                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 8                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 9                   &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 10                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 11                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 12                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 13                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 14                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 15                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 16                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 17                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 18                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 19                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 20                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 21                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 22                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 23                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 24                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 25                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 26                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 27                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 28                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 29                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 30                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 31                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 32                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 33                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 34                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 35                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 36                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 37                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 38                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 39                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 40                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 41                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 42                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 43                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 44                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 45                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 46                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 47                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 48                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 49                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
-## 50                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;</code></pre>
+<span class="kw">head</span>(gt)</code></pre>
+<pre><code>##        alias        pop                              parent
+## 1   Singlets   Singlets                                root
+## 2       Live       Live                           /Singlets
+## 3 Leukocytes Leukocytes                      /Singlets/Live
+## 4       CD3+       CD3+           /Singlets/Live/Leukocytes
+## 5       CD8+       CD8+      /Singlets/Live/Leukocytes/CD3+
+## 6     CXCR1-     CXCR1- /Singlets/Live/Leukocytes/CD3+/CD8+
+##                           dims gating_method gating_args
+## 1                  FSC-A,FSC-H          &lt;NA&gt;        &lt;NA&gt;
+## 2            Comp-Zombie Nir-A          &lt;NA&gt;        &lt;NA&gt;
+## 3                  FSC-A,SSC-A          &lt;NA&gt;        &lt;NA&gt;
+## 4 Comp-Alexa Fluor 532-A,SSC-H          &lt;NA&gt;        &lt;NA&gt;
+## 5           Comp-BV570-A,SSC-H          &lt;NA&gt;        &lt;NA&gt;
+## 6                    Comp-PE-A          &lt;NA&gt;        &lt;NA&gt;
+##   collapseDataForGating groupBy preprocessing_method preprocessing_args
+## 1                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
+## 2                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
+## 3                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
+## 4                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
+## 5                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;
+## 6                  &lt;NA&gt;    &lt;NA&gt;                 &lt;NA&gt;               &lt;NA&gt;</code></pre>
 <p>The auto-filled template will generate within the R Console and can then be saved locally with the following code.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write.csv</span>(gt, <span class="st">&quot;gt.csv&quot;</span>)</code></pre>
 <p>If you choose to create the gating template manually, the same conventions must be followed. Start with a blank spreadsheet. Next, fill in the 10 required column names. From there, use the manual gating hierarchy to fill in each cell population <code>alias</code>. Fill in the remainder accordingly.</p>
-<p>There will likely be troubleshooting involved in this process. <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html#14_gating_method_that_generates_multiple_populations">This</a> is a great place to start if you’re seeking more information on the gating template.</p>
+<p>There will likely be troubleshooting involved in this process. <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html#14_gating_method_that_generates_multiple_populations">This</a> is a great place to start if you’re seeking more information on the gating template. The <code>openCyto</code> <a href="https://github.com/RGLab/openCyto">GitHub page</a> is also very responsive to issues posted.</p>
 </div>
 <div id="load-.csv-into-r" class="section level2">
 <h2><span class="header-section-number">4.3</span> Load .csv into R</h2>
-<p>When the .csv gating template is complete, it is then read into R and saved as <strong>gt</strong>. The gating template will be saved as a GatingTemplate object.</p>
-<pre class="sourceCode r"><code class="sourceCode r">gt &lt;-<span class="st"> </span><span class="kw">gatingTemplate</span>(<span class="st">&quot;/Users/monhait/Desktop/flow_cyto/automated_gating/data/gating_template/auto_template_1.csv&quot;</span>,
-                     <span class="dt">strict =</span> <span class="ot">FALSE</span>, <span class="dt">strip_extra_quotes =</span> <span class="ot">TRUE</span>)
+<p>There is a sample gating template titled <em>partial.csv</em> with the sample data. This may serve as a guide to creating your own. When the .csv gating template is complete, it is then read into R and saved as <strong>gt</strong>. The gating template will be saved as a GatingTemplate object.</p>
+<pre class="sourceCode r"><code class="sourceCode r">gt &lt;-<span class="st"> </span><span class="kw">gatingTemplate</span>(<span class="st">&quot;/Users/monhait/Desktop/flow_cyto/automated_gating/data/gating_template/partial.csv&quot;</span>)
 <span class="kw">print</span>(gt)</code></pre>
 
 </div>

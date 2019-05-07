@@ -12,7 +12,7 @@ When automating analysis, there may be nodes that were not predefined in the .cs
 
 **Full Hierarchy**  
 
-```{r full nodes, eval=FALSE}
+```{r full_nodes, eval=FALSE}
 plot(gh)
 ```
 
@@ -20,7 +20,7 @@ plot(gh)
 
 To remove nodes, first save the unwanted nodes as an R object named **nodesToHide**. Next, use the code following the `lapply()` function, only replacing **gs** with your GatingSet object name.  
 
-```{r hide cd3+, eval=FALSE}
+```{r hide_cd3+, eval=FALSE}
 nodesToHide <- "CD3+"
 lapply(nodesToHide, function(thisNode)setNode(gs, thisNode, FALSE))
 ```
@@ -29,7 +29,7 @@ lapply(nodesToHide, function(thisNode)setNode(gs, thisNode, FALSE))
 
 Rename nodes based on your preferences with the following code. Within the `setNode` function, the first input is the current cell population name and the second is the desired change.  
 
-```{r rename node, eval=FALSE}
+```{r rename_node, eval=FALSE}
 setNode("Live", "Viable")
 ```
  
@@ -39,7 +39,7 @@ setNode("Live", "Viable")
 
 As seen in chapter 2, it may be necessary to adjust the plot axes in order to best view the gates. This is done using the code below. Setting xlim and ylim to "data" adjusts plot based on the actual data range, rather than instrument specifications. Custom ranges can also be input numerically. 
 
-```{r adjust axes, eval=FALSE}
+```{r adjust_axes, eval=FALSE}
 flowWorkspace.par.set("plotGate", list(xlim = "data",
                                        ylim = "data"))
 ```
@@ -64,7 +64,7 @@ Although data will not be altered in any way, transformation may allow for bette
 
 **Without Transformation**  
 
-```{r no trans, echo=FALSE, out.width = '60%'}
+```{r no_trans, echo=FALSE, out.width = '60%'}
 knitr::include_graphics("/Users/monhait/Desktop/bookdown_autogating/images/no_trans.png")
 ```
 
