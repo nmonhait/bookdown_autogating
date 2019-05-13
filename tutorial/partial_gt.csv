@@ -1,0 +1,13 @@
+alias,pop,parent,dims,gating_method,gating_args,collapseDataForGating,groupBy,preprocessing_method,preprocessing_args
+nonDebris,+,root,FSC-A,mindensity,,,,,
+singlets,+,nonDebris,"FSC-A,FSC-H",singletGate,"prediction_level=0.99,maxit=20",,,,
+lymph,+,singlets,"FSC-A,SSC-A",flowClust,"K=2, target=c(1e5,5e4),quantile=0.99",,,prior_flowClust,
+viable,-,lymph,Zombie Nir-A,tailgate,tol=0.05,,,,
+CD3,+,viable,Alexa Fluor 532-A,mindensity,,,,,
+CD4,+,CD3,BV480-A,mindensity,,,,,
+CD8,+,CD3,BV570-A,mindensity,,,,,
+CD45RB(CD8),+,CD8,BV605-A,tailgate,,,,,
+CD153(CD8),+,CD8,BV711-A,tailgate,,,,,
+CTLA4(CD8),+,CD8,BV605-A,tailgate,,,,,
+CXCR1(CD8),+,CD8,PE-A,tailgate,,,,,
+CD44(CD8),+/-,CD8,APC-Fire 750-A,mindensity,,,,,

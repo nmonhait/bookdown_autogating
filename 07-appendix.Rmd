@@ -1,0 +1,25 @@
+# Appendix  
+
+## Function and R Object Definitions
+```{r var def table, echo = FALSE}
+library(knitr)
+vars <- data.frame(var_name = c("wsfile", "openWorkspace()", "ws",
+                                "parseWorkspace()", "gating_set", "clone()",
+                                "gh", "gt", "templateGen()", "gatingTemplate()",
+                                "gating()", "plot()", "plotGate()"),
+                    definition = c("flowJo .wsp file location", 
+                                   "function used to read in **wsfile**",
+                                   "read in data from flowJo",
+                                   "function to extract FCS files from **ws**",
+                                   "parsed FCS files to be gated",
+                                   "function used to create a clone of **gating_set**",
+                                   "subset of gating_set",
+                                   ".csv gating template",
+                                   "function used to generate a .csv template from existing manual gates",
+                                   "function used to read in .csv template",
+                                   "function used to apply gates to a gating set",
+                                   "function to visualize gating tree",
+                                   "function to visualize gates"))
+kable(vars, align = c("c", "c", "c", "c", "c"),
+      col.names = c("Function/Object Name", "Definition"))
+```

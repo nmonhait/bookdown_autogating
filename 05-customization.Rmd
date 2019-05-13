@@ -12,7 +12,7 @@ When automating analysis, there may be nodes that were not predefined in the .cs
 
 **Full Hierarchy**  
 
-```{r full_nodes, eval=FALSE}
+```{r full_nodes, warning=FALSE, message=FALSE}
 plot(gh)
 ```
 
@@ -20,17 +20,18 @@ plot(gh)
 
 To remove nodes, first save the unwanted nodes as an R object named **nodesToHide**. Next, use the code following the `lapply()` function, only replacing **gs** with your GatingSet object name.  
 
-```{r hide_cd3+, eval=FALSE}
+```{r hide_cd3+, warning=FALSE, message=FALSE}
 nodesToHide <- "CD3+"
-lapply(nodesToHide, function(thisNode)setNode(gs, thisNode, FALSE))
+lapply(nodesToHide, function(thisNode)setNode(gh, thisNode, FALSE))
 ```
 
 ## Renaming nodes
 
 Rename nodes based on your preferences with the following code. Within the `setNode` function, the first input is the current cell population name and the second is the desired change.  
 
-```{r rename_node, eval=FALSE}
+```{r rename_node, message=FALSE, warning=FALSE, eval = FALSE}
 setNode("Live", "Viable")
+plot(gh)
 ```
  
 ## Adjusting plots
@@ -60,7 +61,7 @@ knitr::include_graphics("/Users/monhait/Desktop/bookdown_autogating/images/cd8_d
 
 ### Transform data for better visualization  
 
-Although data will not be altered in any way, transformation may allow for better visualization. The most common form of transformation for flow cytometry analysis is [bioexponential](http://docs.flowjo.com/vx/graphs-and-gating/gw-transform-overview/). Below is a comparison of gates without transformation and gates that have been transformed.  
+Although data will not be altered in any way, transformation may allow for better visualization. The most common form of transformation for flow cytometry analysis is [biexponential](http://docs.flowjo.com/vx/graphs-and-gating/gw-transform-overview/). Below is a comparison of gates without transformation and gates that have been transformed.  
 
 **Without Transformation**  
 

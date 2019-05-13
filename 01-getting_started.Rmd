@@ -10,48 +10,51 @@ Here is an overview of the process to automate flow cytometry data using R's `op
 6. Visualize automated gating template and gates to verify gating scheme. 
 7. Extract population statistics and relevant information. 
 
-This process is completed primarily with the `openCyto` package but calls upon other packages within the Bioconductor `openCyto` framework. Packages needed to complete this tutorial are listed at the end of this chapter. Descriptions of each function and R object used for this analysis are below. 
+This process is completed primarily with the `openCyto` package but calls upon other packages within the [Bioconductor](http://bioconductor.org/packages/release/bioc/html/openCyto.html) `openCyto` framework. Packages needed to complete this tutorial are listed at the end of this chapter. Descriptions of each function and R object used for this analysis are below. 
 
-## Function and R Object Definitions
-```{r var def table, echo = FALSE}
-library(knitr)
-vars <- data.frame(var_name = c("wsfile", "openWorkspace()", "ws",
-                                "parseWorkspace()", "gating_set", "clone()",
-                                "gh", "gt", "templateGen()", "gatingTemplate()",
-                                "gating()", "plot()", "plotGate()"),
-                    definition = c("flowJo .wsp file location", 
-                                   "function used to read in **wsfile**",
-                                   "read in data from flowJo",
-                                   "function to extract FCS files from **ws**",
-                                   "parsed FCS files to be gated",
-                                   "function used to create a clone of **gating_set**",
-                                   "subset of gating_set",
-                                   ".csv gating template",
-                                   "function used to generate a .csv template from existing manual gates",
-                                   "function used to read in .csv template",
-                                   "function used to apply gates to a gating set",
-                                   "function to visualize gating tree",
-                                   "function to visualize gates"))
-kable(vars, align = c("c", "c", "c", "c", "c"),
-      col.names = c("Function/Object Name", "Definition"))
-```
 
 ## Required Packages and Installation  
 
-Before getting started, install and load the following libraries into a new R script. As you will see below, this tutorial uses the development version of `openCyto`. Use the following to ensure the correct packages are installed.  
+### Package descriptions  
 
-RStudio may also prompt you to download [XQuartz](https://www.xquartz.org/) and [XCode](https://developer.apple.com/xcode/), so it may be a good idea to go ahead and also download both before beginning.  
+Below is a description of each package used in this analysis. Code to install and use these packages will follow. Package descriptions taken from Bioconductor and CRAN.  
+
+```{r  pack_def, echo = FALSE}
+library(knitr)
+vars <- data.frame(pack_name = c("openCyto", "flowWorkspace", "flowCore",
+                                "flowStats", "flowClust", "data.table"),
+                    definition = c("This package is designed to facilitate the automated gating methods in sequential way to mimic the manual gating strategy.", 
+                                   "This package allows you to import basic flowJo workspaces into BioConductor and replicate the gating from flowJo using the flowCore functionality. Gating hierarchies, groups of samples, compensation, and transformation are performed so that the output matches the flowJo analysis.",
+                                   "Provides S4 data structures and basic functions to deal with flow cytometry data.",
+                                   "Methods and functionality to analyse flow data that is beyond the basic infrastructure provided by the flowCore package.",
+                                   "Robust model-based clustering using a t-mixture model with Box-Cox transformation. ",
+                                   "Fast aggregation of large data (e.g. 100GB in RAM), fast ordered joins, fast add/modify/delete of columns by group using no copies at all, list columns, friendly and fast character-separated-value read/write. Offers a natural and flexible syntax, for faster development."))
+kable(vars, align = c("c", "c", "c", "c", "c"),
+      col.names = c("Package Name", "Use"))
+```
+
+### Installation  
+
+Install the following libraries into a new R script. As you will see below, this tutorial uses the development version of `openCyto`. It is important to use the development version of `openCyto` to remain up to date on any changes made by the developers of `openCyto`. Use the following to ensure the correct packages are installed. Installation will only need to be done once.  
 
 *To install*  
 ```{r install, warning=FALSE, eval=FALSE, message=FALSE, echo = TRUE}
-devtools::install_github("RGLab/openCyto", ref = "trunk")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install() 
+
+BiocManager::install(c("openCyto", "flowWorkspace", "flowCore",
+                       "flowStats", "flowClust"))
+
 install.packages("data.table")
-install.packages("flowWorkspace")
-install.packages("flowCore")
-install.packages("flowStats")
-install.packages("flowClust")
-install.packages("plyr")
+devtools::install_github("RGLab/openCyto", ref = "trunk")
 ```
+
+RStudio may also prompt you to download [XQuartz](https://www.xquartz.org/) and [XCode](https://developer.apple.com/xcode/) based on your computer type, so it may be a good idea to go ahead and also download both.  
+
+### Load packages  
+
+Although installation only needs to be done once, packages will need to be reloaded each time you open an R session. At the beginning of each session, run the following code.  
 
 *To load*  
 ```{r packages1, warning=FALSE, eval=FALSE, message=FALSE, echo = TRUE}
@@ -61,5 +64,4 @@ library(data.table)
 library(flowCore)
 library(flowStats)
 library(flowClust)
-library(plyr)
 ```

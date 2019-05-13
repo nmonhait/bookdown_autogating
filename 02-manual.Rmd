@@ -1,23 +1,20 @@
 # Working with your Manual Gating Scheme
 
-Current methods for manually gating flow cytometry are both time consuming and costly, making automated gating an appealing option. The `openCyto` package allows users to take manually gated data from flowJo, reproduce those gates in R, and eventually automate the gating process. 
-
 The first step in this process is to bring a pre-existing flowJo file into R in order to recreate the gating environment. The remainder of this chapter will detail the following:
 
 1. Read in flowJo .wsp file  
 2. Parse FCS files  
 3. Visualize and verify manual gates 
-4. Clone data for later automation
 
 ## Read in flowJo file
 
-Within flowJo, tranformation, compensation, and gating can be saved as either .xml or .wsp filetypes. This tutorial will only detail steps from a *.wsp* filetype saved from flowJo. Note that many other tutorials begin from a *.xml* file, which seems to cause many errors during this analysis. Saving analysis within flowJo is detailed [here](http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/). 
+Within flowJo, tranformation, compensation, and gating can be saved as either *.xml* or *.wsp* filetypes. This tutorial will only detail steps from a *.wsp* filetype saved from flowJo. Note that many other tutorials begin from a *.xml* filetype. Saving analysis within flowJo is detailed [here](http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/). Your *.wsp* file will contain samples and groups to be added to the Workspace in R, all gates and analyses, and compensation matrices. Importantly, the *.wsp* will not save your FCS files. Rather, the path to your files will be saved and can be adjusted later within R.  
 
-The result of step 1 will be replication of the manual transformation, compensation, and gating from the flowJo workspace saved as an R object. Before you begin, be sure you have loaded the required packages outlined in the previous chapter.
+Before you begin, be sure you have loaded the required packages outlined in the previous chapter.
 
-Once all packages are loaded, save the .wsp file path as an R object called **wsfile**. Next, use `openWorkspace()` with your R object name to open the .wsp file in R, save this as **ws**. Here is an example of saving and opening **wsfile**. Following this step, **ws** will be saved as a flowWorkspace object containing groups of samples. 
+Once all packages are loaded, save the *.wsp* file path as an R object called **wsfile**. Next, use `openWorkspace()` with your R object created in the prior step to open the *.wsp* file in R. Save this as an R object. Here, this was saved as **ws** and is of flowJoWorkspace class. Here is an example of saving and opening your *.wsp* filetype in R. Please ensure that **ws** is saved as a flowWorkspace object containing groups of samples before proceeding.  
 
-```{r packages, warning=FALSE, message=FALSE, echo = TRUE}
+```{r packages, warning=FALSE, message=FALSE, echo = FALSE}
 library(openCyto)
 library(flowWorkspace)
 library(data.table)
@@ -27,7 +24,7 @@ library(flowClust)
 library(plyr)
 ```
 ```{r manual gating data, warning=FALSE, message=FALSE}
-wsfile <- "/Users/monhait/Desktop/group1_v_group2.wsp"
+wsfile <- "./tutorial/group1_v_group2.wsp"
 ```
 ```{r open, warning=FALSE, message=FALSE}
 ws <- openWorkspace(wsfile)
@@ -39,10 +36,12 @@ print(ws)
 
 ## Parse FCS files 
 
-Once this file exists as an R object, the raw FCS files are then read using the `parseWorkspace` function. This function will read the FCS files and transform, compensate, and gate according to parameters defined from the .wsp flowJo workspace. The `parseWorskpace` call requires **ws** (the .wsp workspace that was just read in from flowJo) and the name of the samples to read in. Other options may be customized based on particular needs. A new R object named **gating_set** is then created and will be a GatingSet object. The **isNcdf = TRUE** call saves this output to disk rather that into memory because the files are large. Here is an example of parsing FCS files. After this, `attributes()` is used to examine the data.    
+The next step is to read in raw FCS files. FCS files contain data from the cytometer. Standards for FCS files are listed [here](http://software.broadinstitute.org/cancer/software/genepattern/attachments/fcs_3_1_standard.pdf). 
+
+Raw FCS files are read using the `parseWorkspace` function. This function will read the FCS files and transform, compensate, and gate according to parameters defined from the *.wsp* flowJo workspace, which is now saved as an R object of class flowWorkspace. The `parseWorkspace` call requires the object that results from running `openWorkspace`. Here, we named this object `ws`. The function `parseWorkspace()` also requires the name of the samples to read in. To list sample names, use the `getSampleGroups()` function on your flowWorkspace class object. Other options may be customized based on particular needs. A new R object named `gating_set` is then created and will be a GatingSet object. The `isNcdf = TRUE` call saves this output to disk rather that into memory because the files are large. Here is an example of parsing FCS files. As this function runs, you will see several messages appear as the FCS files are loaded and the manual gating scheme is replicated. After this, `attributes()` is used to examine the data.    
 
 ```{r parse_FCS, warning=FALSE, message=FALSE}
-gating_set <- parseWorkspace(ws, name = "Samples", path = "/Users/monhait/Desktop/data/group1_v_group2", isNcdf = TRUE, sampNloc = 'sampleNode')
+gating_set <- parseWorkspace(ws, name = "Samples", path = "./tutorial/group1_v_group2", isNcdf = TRUE, sampNloc = 'sampleNode')
 ```
 ```{r rename, echo = FALSE}
 newNames <- c("X_group1_1", "X_group1_2", "X_group1_3", "X_group1_4", "X_group1_5",
@@ -56,7 +55,7 @@ attributes(gating_set)
 
 ## Visualize and Verify
 
-It is helpful to now visualize both the gating template and actual gates on a subset of the data in order to verify the gating scheme. This will ensure consistency between the flowJo workspace and the manual gates recreated in R. First, save a subset of the gating_set as follows. The following saves the first FCS file of **gating_set** as **gh**. 
+It is helpful to now visualize both the gating template and gates on a subset of the data in order to verify the gating scheme. This will ensure consistency between the flowJo workspace and the manual gates recreated in R. First, save a subset of the `gating_set` as follows. The following saves the first FCS file of **gating_set** as **gh**. Since each FCS file corresponds to an individual experiment, this saves the first experiment of the group.  
 
 ```{r save_subset, warning=FALSE, message=FALSE}
 gh <- gating_set[[1]]
@@ -65,7 +64,7 @@ print(gh)
 
 ### plot()
 
-The plot() function will visualize the current gating hierarchy. This can be done for the entire gating hierarchy or a specific population as seen below. 
+The plot() function will visualize the current gating hierarchy when applied to an object of class GatingHierarchy. This can be done for the entire gating hierarchy or a specific population as seen below. 
 
 ```{r manual_hierarchy, warning=FALSE, message=FALSE}
 plot(gh)
@@ -73,7 +72,7 @@ plot(gh)
 
 ### plotGate()
 
-The plotGate() function will gate the designated subset of your data according to parameters replicated from flowJo. 
+The plotGate() function will gate the designated subset of your data according to parameters replicated from flowJo. This must also be called on an object of class GatingHierarchy.  
 
 ```{r visualize_subset,warning=FALSE, message=FALSE}
 flowWorkspace.par.set("plotGate", list(xlim = "data",
@@ -82,15 +81,5 @@ plotGate(gh)
 ```
 
 **Note the use of `flowWorkspace.par.set()` here. Chapter 5 of this tutorial will discuss customizations such as this one.   
-
-## Clone
-
-Now, the manual gating scheme has been replicated in R using `openCyto` and verified for consistency with the original flowJo workspace. The final step in this chapter will clone **gating_set** into a new R object named **auto_gating**. 
-
-```{r clone_data, warning=FALSE, message=FALSE}
-auto_gating <- clone(gating_set)
-print(auto_gating)
-```
-
 
 
