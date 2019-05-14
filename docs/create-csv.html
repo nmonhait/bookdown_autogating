@@ -198,25 +198,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="create-.csv" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Create .csv</h1>
 <p>The creation of a .csv gating template is arguably the most important step to automating flow cytometry analysis. The .csv template that you create will tell <code>openCyto</code> how to gate your data. Included with this tutorial is a partial .csv template that can be used to gate the sample data. Generally, .csv templates will look like this:</p>
-<p><img src="/Users/monhait/Desktop/data/images/entire_csv.png" width="60%" /></p>
+<p><img src="tutorial/images/entire_csv.png" width="60%" /></p>
 <div id="csv-gating-template-structure" class="section level2">
 <h2><span class="header-section-number">4.1</span> .csv Gating Template Structure</h2>
 <p>In the gating template, each row corresponds to a single cell population and the method used to gate that population. When read into R, the .csv will direct gating based on parameters listed in each row and column. The .csv must contain 10 predefined columns as seen here:</p>
-<p><img src="/Users/monhait/Desktop/data/images/cols.png" width="60%" /></p>
+<p><img src="tutorial/images/cols.png" width="60%" /></p>
 <div id="alias" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> <code>alias</code></h3>
 <p>The first column must be titled <code>alias</code>. This is where you will put your cell population names. Remember, each row corresponds to a single cell population. Population names in the <code>alias</code> column must be unique.</p>
-<p><img src="/Users/monhait/Desktop/data/images/alias.png" width="60%" /></p>
+<p><img src="tutorial/images/alias.png" width="60%" /></p>
 </div>
 <div id="pop" class="section level3">
 <h3><span class="header-section-number">4.1.2</span> <code>pop</code></h3>
 <p>The second column must be titled <code>pop</code>. This column will contain a <code>+</code> or <code>-</code> to designate which subset or quadrant will be gated. A <code>+</code> will gate the positive subset while a <code>-</code> will gate the negative. This column can only contain strings of <code>+</code> and <code>-</code>, so do not use any characters as separators for quadrant gates.</p>
-<p><img src="/Users/monhait/Desktop/data/images/pop.png" width="60%" /></p>
+<p><img src="tutorial/images/pop.png" width="60%" /></p>
 </div>
 <div id="parent" class="section level3">
 <h3><span class="header-section-number">4.1.3</span> <code>parent</code></h3>
 <p>The third column must be titled <code>parent</code>. This column refers to the parent cell population, or where the current cell population originates from. Similar to the <code>alias</code> column, <code>parent</code> names must be unique. This column cannot contain any commas, otherwise <code>openCyto</code> will assume the population has multiple parents and you will get an error message.</p>
-<p><img src="/Users/monhait/Desktop/data/images/parent.png" width="60%" /></p>
+<p><img src="tutorial/images/parent.png" width="60%" /></p>
 </div>
 <div id="remaining-template-columns" class="section level3">
 <h3><span class="header-section-number">4.1.4</span> Remaining template columns</h3>

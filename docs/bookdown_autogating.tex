@@ -125,7 +125,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-05-12}
+    \date{2019-05-13}
 
 \usepackage{booktabs}
 
@@ -265,7 +265,7 @@ Once all packages are loaded, save the \emph{.wsp} file path as an R object call
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{wsfile <-}\StringTok{ "/Users/monhait/Desktop/group1_v_group2.wsp"}
+\NormalTok{wsfile <-}\StringTok{ "./tutorial/group1_v_group2.wsp"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -283,7 +283,7 @@ Once all packages are loaded, save the \emph{.wsp} file path as an R object call
 
 \begin{verbatim}
 ## FlowJo Workspace Version  20.0 
-## File location:  /Users/monhait/Desktop 
+## File location:  ./tutorial 
 ## File name:  group1_v_group2.wsp 
 ## Workspace is open. 
 ## 
@@ -302,7 +302,7 @@ Raw FCS files are read using the \texttt{parseWorkspace} function. This function
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gating_set <-}\StringTok{ }\KeywordTok{parseWorkspace}\NormalTok{(ws, }\DataTypeTok{name =} \StringTok{"Samples"}\NormalTok{, }\DataTypeTok{path =} \StringTok{"/Users/monhait/Desktop/data/group1_v_group2"}\NormalTok{, }\DataTypeTok{isNcdf =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sampNloc =} \StringTok{'sampleNode'}\NormalTok{)}
+\NormalTok{gating_set <-}\StringTok{ }\KeywordTok{parseWorkspace}\NormalTok{(ws, }\DataTypeTok{name =} \StringTok{"Samples"}\NormalTok{, }\DataTypeTok{path =} \StringTok{"./tutorial/group1_v_group2"}\NormalTok{, }\DataTypeTok{isNcdf =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sampNloc =} \StringTok{'sampleNode'}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -369,35 +369,35 @@ The plotGate() function will gate the designated subset of your data according t
 
 The creation of a .csv gating template is arguably the most important step to automating flow cytometry analysis. The .csv template that you create will tell \texttt{openCyto} how to gate your data. Included with this tutorial is a partial .csv template that can be used to gate the sample data. Generally, .csv templates will look like this:
 
-\includegraphics[width=0.6\linewidth]{/Users/monhait/Desktop/data/images/entire_csv}
+\includegraphics[width=0.6\linewidth]{./tutorial/images/entire_csv}
 
 \hypertarget{csv-gating-template-structure}{%
 \section{.csv Gating Template Structure}\label{csv-gating-template-structure}}
 
 In the gating template, each row corresponds to a single cell population and the method used to gate that population. When read into R, the .csv will direct gating based on parameters listed in each row and column. The .csv must contain 10 predefined columns as seen here:
 
-\includegraphics[width=0.6\linewidth]{/Users/monhait/Desktop/data/images/cols}
+\includegraphics[width=0.6\linewidth]{./tutorial/images/cols}
 
 \hypertarget{alias}{%
 \subsection{\texorpdfstring{\texttt{alias}}{alias}}\label{alias}}
 
 The first column must be titled \texttt{alias}. This is where you will put your cell population names. Remember, each row corresponds to a single cell population. Population names in the \texttt{alias} column must be unique.
 
-\includegraphics[width=0.6\linewidth]{/Users/monhait/Desktop/data/images/alias}
+\includegraphics[width=0.6\linewidth]{./tutorial/images/alias}
 
 \hypertarget{pop}{%
 \subsection{\texorpdfstring{\texttt{pop}}{pop}}\label{pop}}
 
 The second column must be titled \texttt{pop}. This column will contain a \texttt{+} or \texttt{-} to designate which subset or quadrant will be gated. A \texttt{+} will gate the positive subset while a \texttt{-} will gate the negative. This column can only contain strings of \texttt{+} and \texttt{-}, so do not use any characters as separators for quadrant gates.
 
-\includegraphics[width=0.6\linewidth]{/Users/monhait/Desktop/data/images/pop}
+\includegraphics[width=0.6\linewidth]{./tutorial/images/pop}
 
 \hypertarget{parent}{%
 \subsection{\texorpdfstring{\texttt{parent}}{parent}}\label{parent}}
 
 The third column must be titled \texttt{parent}. This column refers to the parent cell population, or where the current cell population originates from. Similar to the \texttt{alias} column, \texttt{parent} names must be unique. This column cannot contain any commas, otherwise \texttt{openCyto} will assume the population has multiple parents and you will get an error message.
 
-\includegraphics[width=0.6\linewidth]{/Users/monhait/Desktop/data/images/parent}
+\includegraphics[width=0.6\linewidth]{./tutorial/images/parent}
 
 \hypertarget{remaining-template-columns}{%
 \subsection{Remaining template columns}\label{remaining-template-columns}}
@@ -480,7 +480,7 @@ As noted in the previous chapter, there is a sample gating template titled \emph
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gt <-}\StringTok{ }\KeywordTok{gatingTemplate}\NormalTok{(}\StringTok{"/Users/monhait/Desktop/partial_gt.csv"}\NormalTok{)}
+\NormalTok{gt <-}\StringTok{ }\KeywordTok{gatingTemplate}\NormalTok{(}\StringTok{"./tutorial/partial_gt.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -493,7 +493,7 @@ Now that the GatingTemplate object has been loaded into R, you will need to load
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fcs_files <-}\StringTok{ }\KeywordTok{list.files}\NormalTok{(}\DataTypeTok{path =} \StringTok{"/Users/monhait/Desktop/data/group1_v_group2"}\NormalTok{, }\DataTypeTok{full.names =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{fcs_files <-}\StringTok{ }\KeywordTok{list.files}\NormalTok{(}\DataTypeTok{path =} \StringTok{"./tutorial/group1_v_group2"}\NormalTok{, }\DataTypeTok{full.names =} \OtherTok{TRUE}\NormalTok{)}
 \NormalTok{ncfs  <-}\StringTok{ }\KeywordTok{read.ncdfFlowSet}\NormalTok{(}\DataTypeTok{files =}\NormalTok{ fcs_files)}
 \NormalTok{gs_auto <-}\StringTok{ }\KeywordTok{GatingSet}\NormalTok{(ncfs)}
 \end{Highlighting}

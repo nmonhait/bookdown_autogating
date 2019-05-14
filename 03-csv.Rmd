@@ -3,7 +3,7 @@
 The creation of a .csv gating template is arguably the most important step to automating flow cytometry analysis. The .csv template that you create will tell `openCyto` how to gate your data. Included with this tutorial is a partial .csv template that can be used to gate the sample data. Generally, .csv templates will look like this:
 
 ```{r show_temp, echo=FALSE, out.width = '60%'}
-knitr::include_graphics("/Users/monhait/Desktop/data/images/entire_csv.png")
+knitr::include_graphics("./tutorial/images/entire_csv.png")
 ```
 
 ## .csv Gating Template Structure  
@@ -11,7 +11,7 @@ knitr::include_graphics("/Users/monhait/Desktop/data/images/entire_csv.png")
 In the gating template, each row corresponds to a single cell population and the method used to gate that population. When read into R, the .csv will direct gating based on parameters listed in each row and column. The .csv must contain 10 predefined columns as seen here:
 
 ```{r show_cols, echo=FALSE, out.width = '60%'}
-knitr::include_graphics("/Users/monhait/Desktop/data/images/cols.png")
+knitr::include_graphics("./tutorial/images/cols.png")
 ```
 
 ### `alias`  
@@ -19,7 +19,7 @@ knitr::include_graphics("/Users/monhait/Desktop/data/images/cols.png")
 The first column must be titled `alias`. This is where you will put your cell population names. Remember, each row corresponds to a single cell population. Population names in the `alias` column must be unique. 
 
 ```{r show_alias, echo=FALSE, out.width = '60%'}
-knitr::include_graphics("/Users/monhait/Desktop/data/images/alias.png")
+knitr::include_graphics("./tutorial/images/alias.png")
 ```
 
 ### `pop`  
@@ -27,7 +27,7 @@ knitr::include_graphics("/Users/monhait/Desktop/data/images/alias.png")
 The second column must be titled `pop`. This column will contain a `+` or `-` to designate which subset or quadrant will be gated. A `+` will gate the positive subset while a `-` will gate the negative. This column can only contain strings of `+` and `-`, so do not use any characters as separators for quadrant gates.  
 
 ```{r show_pop, echo=FALSE, out.width = '60%'}
-knitr::include_graphics("/Users/monhait/Desktop/data/images/pop.png")
+knitr::include_graphics("./tutorial/images/pop.png")
 ```
 
 ### `parent`  
@@ -35,7 +35,7 @@ knitr::include_graphics("/Users/monhait/Desktop/data/images/pop.png")
 The third column must be titled `parent`. This column refers to the parent cell population, or where the current cell population originates from. Similar to the `alias` column, `parent` names must be unique. This column cannot contain any commas, otherwise `openCyto` will assume the population has multiple parents and you will get an error message.  
 
 ```{r show_parent, echo=FALSE, out.width = '60%'}
-knitr::include_graphics("/Users/monhait/Desktop/data/images/parent.png")
+knitr::include_graphics("./tutorial/images/parent.png")
 ```
 
 ### Remaining template columns  
