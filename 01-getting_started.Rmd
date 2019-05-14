@@ -5,19 +5,20 @@ Here is an overview of the process to automate flow cytometry data using R's `op
 1. Read in a manually gated flowJo workspace in .wsp file format.
 2. Parse raw FCS files from the read in workspace.
 3. Visualize the manual gating template and resulting gates to verify gating scheme.
-4. Create and read in a .csv gating template.
-5. Automate gating.
-6. Visualize automated gating template and gates to verify gating scheme. 
-7. Extract population statistics and relevant information. 
+4. Create and read in a *.csv* gating template. 
+5. Read in raw FCS files to be gated.  
+6. Automate gating.
+7. Visualize automated gating template and gates to verify gating scheme. 
+8. Extract population statistics and relevant information. 
 
-This process is completed primarily with the `openCyto` package but calls upon other packages within the [Bioconductor](http://bioconductor.org/packages/release/bioc/html/openCyto.html) `openCyto` framework. Packages needed to complete this tutorial are listed at the end of this chapter. Descriptions of each function and R object used for this analysis are below. 
+This process is completed primarily with the `openCyto` package but calls upon other packages within the [Bioconductor](http://bioconductor.org/packages/release/bioc/html/openCyto.html) `openCyto` framework. Packages needed to complete this tutorial are listed at the end of this chapter. Descriptions of each function and R object used for this analysis can be found in the Appendix. 
 
 
 ## Required Packages and Installation  
 
 ### Package descriptions  
 
-Below is a description of each package used in this analysis. Code to install and use these packages will follow. Package descriptions taken from Bioconductor and CRAN.  
+Below is a description of each package used in this analysis. Code to install and use these packages will follow. Package descriptions were taken from Bioconductor and CRAN.  
 
 ```{r  pack_def, echo = FALSE}
 library(knitr)
@@ -32,6 +33,16 @@ vars <- data.frame(pack_name = c("openCyto", "flowWorkspace", "flowCore",
 kable(vars, align = c("c", "c", "c", "c", "c"),
       col.names = c("Package Name", "Use"))
 ```
+
+### Directory set-up  
+
+The working directory is a location on your computer where R will save and read files from. Download the folder titled "tutorial" which contains all of the content needed to complete this tutorial and place it on your desktop. To set this folder as the current working directory, use the following code. Check this by next calling, `getwd()`. The result of `getwd()` should be a pathname to the tutorial folder on your desktop. Once this is set, all of the code within this tutorial will run without needing to change pathnames.  
+
+```{r setwd, warning=FALSE, message=FALSE, eval = FALSE}
+setwd("/Users/monhait/Desktop/tutorial")
+getwd()
+```
+
 
 ### Installation  
 

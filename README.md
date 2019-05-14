@@ -1,1 +1,1 @@
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). Please see the page "Get Started" at https://bookdown.org/ for how to compile this example.
+This tutorial was created to allow users to automate flow cytometry analysis in R using the `openCyto` package. The tutorial includes steps to complete automation from a flowJo Workspace file. Full details on tutorial contents are included in the following chapters.

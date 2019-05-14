@@ -1,0 +1,25 @@
+# References  
+
+1. Data File Standard for Flow Cytometry. (n.d.). International Society for Advancement of Cytometry.
+  Retrieved May 10, 2019, 
+  from http://software.broadinstitute.org/cancer/software/genepattern/attachments/fcs_3_1_standard.pdf 
+
+2. Duggan, R. (2014, August 20). Cytometry on Air: Analyzing Flow Cytometry Data using R.
+  https://www.youtube.com/watch?v=_B7mo6dB3BU 
+
+3. Finak, G. (2014, July 10). OpenCyto Practical Workshop. Retrieved February 14, 2019, from
+  https://www.bioconductor.org/help/course-materials/2014/BioC2014/OpenCytoPracticalComponent.html
+  
+4 How to plot gated data. (n.d.). Retrieved March 10, 2019, from https://www.bioconductor.org/packages/devel/bioc/vignettes/flowWorkspace/inst/doc/plotGate.html 
+  
+5. How to write a csv gating template. (n.d.). Retrieved March 3, 2019, from
+  https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html#14_
+  gating_method_that_generates_multiple_populations
+  
+6. Saving your Analysis. (n.d.). Retrieved May 5, 2019, from
+  http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/
+
+7. Verschoor CP, Lelic A, Bramson JL and Bowdish DME (2015) An introduction to automated
+  flow cytometry gating tools and their implementation. Front. Immunol. 6:380.
+  doi: 10.3389/fimmu.2015.00380  
+  

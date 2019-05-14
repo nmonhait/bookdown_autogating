@@ -29,8 +29,6 @@
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
-\usepackage{natbib}
-\bibliographystyle{plainnat}
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -125,7 +123,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-05-13}
+    \date{2019-05-14}
 
 \usepackage{booktabs}
 
@@ -139,11 +137,11 @@
 \hypertarget{whats-inside}{%
 \chapter{What's inside?}\label{whats-inside}}
 
-Flow cyometry is a method used to gain understanding of cell samples and populations by quantifying scattered and emitted fluorescent light. Signals are captured and analyzed through use of software programs. Flow cytometry analysis consists of gating, a method that dictates which cells will be further analyzed and which will not. Current methods for flow cytometry gating involve manually drawing gates. This process is both time consuming and costly, making automated gating procedures an appealing option. The \texttt{openCyto} package allows users to take manually gated data from flowJo, reproduce those gates in R, and eventually automate the gating process. The goal of this tutorial is to take the user through the process of automated gating analysis.
+Flow cyometry is a method used to gain understanding of cell samples and populations by quantifying scattered and emitted fluorescent light (7). Signals are captured and analyzed through use of software programs. Flow cytometry analysis consists of gating, a method that dictates which cells will be further analyzed and which will not (7). Current methods for flow cytometry gating involve manually drawing gates. This process is both time consuming and costly, making automated gating procedures an appealing option. The \texttt{openCyto} package allows users to take manually gated data from flowJo, reproduce those gates in R, and eventually automate the gating process. The goal of this tutorial is to take the user through the process of automated gating analysis.
 
 This tutorial will be useful to anyone who has done manual gating on a sample and wishes to automate the same procedure on additional samples in the future.
 
-The example data used in this tutorial is from Colorado State University's Microbiology, Immunology, and Pathology Department. Alternatively, you can input your own data using the filetypes described in Chapter 3.
+The example data used in this tutorial is from Colorado State University's Microbiology, Immunology, and Pathology Department. For documentation on the flow cytometer used at CSU, please see the Appendix. Alternatively, you can input your own data using the filetypes described in Chapter 3.
 
 \hypertarget{getting-started}{%
 \chapter{Getting Started}\label{getting-started}}
@@ -160,7 +158,9 @@ Here is an overview of the process to automate flow cytometry data using R's \te
 \item
   Visualize the manual gating template and resulting gates to verify gating scheme.
 \item
-  Create and read in a .csv gating template.
+  Create and read in a \emph{.csv} gating template.
+\item
+  Read in raw FCS files to be gated.\\
 \item
   Automate gating.
 \item
@@ -169,7 +169,7 @@ Here is an overview of the process to automate flow cytometry data using R's \te
   Extract population statistics and relevant information.
 \end{enumerate}
 
-This process is completed primarily with the \texttt{openCyto} package but calls upon other packages within the \href{http://bioconductor.org/packages/release/bioc/html/openCyto.html}{Bioconductor} \texttt{openCyto} framework. Packages needed to complete this tutorial are listed at the end of this chapter. Descriptions of each function and R object used for this analysis are below.
+This process is completed primarily with the \texttt{openCyto} package but calls upon other packages within the \href{http://bioconductor.org/packages/release/bioc/html/openCyto.html}{Bioconductor} \texttt{openCyto} framework. Packages needed to complete this tutorial are listed at the end of this chapter. Descriptions of each function and R object used for this analysis can be found in the Appendix.
 
 \hypertarget{required-packages-and-installation}{%
 \section{Required Packages and Installation}\label{required-packages-and-installation}}
@@ -177,7 +177,7 @@ This process is completed primarily with the \texttt{openCyto} package but calls
 \hypertarget{package-descriptions}{%
 \subsection{Package descriptions}\label{package-descriptions}}
 
-Below is a description of each package used in this analysis. Code to install and use these packages will follow. Package descriptions taken from Bioconductor and CRAN.
+Below is a description of each package used in this analysis. Code to install and use these packages will follow. Package descriptions were taken from Bioconductor and CRAN.
 
 \begin{tabular}{c|c}
 \hline
@@ -196,6 +196,18 @@ flowClust & Robust model-based clustering using a t-mixture model with Box-Cox t
 data.table & Fast aggregation of large data (e.g. 100GB in RAM), fast ordered joins, fast add/modify/delete of columns by group using no copies at all, list columns, friendly and fast character-separated-value read/write. Offers a natural and flexible syntax, for faster development.\\
 \hline
 \end{tabular}
+
+\hypertarget{directory-set-up}{%
+\subsection{Directory set-up}\label{directory-set-up}}
+
+The working directory is a location on your computer where R will save and read files from. Download the folder titled ``tutorial'' which contains all of the content needed to complete this tutorial and place it on your desktop. To set this folder as the current working directory, use the following code. Check this by next calling, \texttt{getwd()}. The result of \texttt{getwd()} should be a pathname to the tutorial folder on your desktop. Once this is set, all of the code within this tutorial will run without needing to change pathnames.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"/Users/monhait/Desktop/tutorial"}\NormalTok{)}
+\KeywordTok{getwd}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{installation}{%
 \subsection{Installation}\label{installation}}
@@ -241,13 +253,13 @@ Although installation only needs to be done once, packages will need to be reloa
 \hypertarget{working-with-your-manual-gating-scheme}{%
 \chapter{Working with your Manual Gating Scheme}\label{working-with-your-manual-gating-scheme}}
 
-The first step in this process is to bring a pre-existing flowJo file into R in order to recreate the gating environment. The remainder of this chapter will detail the following:
+The first step in this process is to bring a pre-existing flowJo file into R to recreate the gating environment. This chapter will detail the following:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Read in flowJo .wsp file\\
+  Read in flowJo \emph{.wsp} file\\
 \item
   Parse FCS files\\
 \item
@@ -257,15 +269,19 @@ The first step in this process is to bring a pre-existing flowJo file into R in 
 \hypertarget{read-in-flowjo-file}{%
 \section{Read in flowJo file}\label{read-in-flowjo-file}}
 
-Within flowJo, tranformation, compensation, and gating can be saved as either \emph{.xml} or \emph{.wsp} filetypes. This tutorial will only detail steps from a \emph{.wsp} filetype saved from flowJo. Note that many other tutorials begin from a \emph{.xml} filetype. Saving analysis within flowJo is detailed \href{http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/}{here}. Your \emph{.wsp} file will contain samples and groups to be added to the Workspace in R, all gates and analyses, and compensation matrices. Importantly, the \emph{.wsp} will not save your FCS files. Rather, the path to your files will be saved and can be adjusted later within R.
+Within flowJo, tranformation, compensation, and gating can be saved as either \emph{.xml} or \emph{.wsp} filetypes. This tutorial will only detail steps from a \emph{.wsp} filetype saved from flowJo. Note that many other tutorials begin from a \emph{.xml} filetype. Saving analysis within flowJo is detailed \href{http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/}{here}.
+
+Your \emph{.wsp} file will contain cell samples and groups to be added to the Workspace in R. The R Workspace is where all gates, analyses, and compensation matrices applied to samples within flowJo will be replicated and can be added to other samples in R. Importantly, the \emph{.wsp} will not contain your FCS files. Rather, the path to your files will be saved within the \emph{.wsp} and will be referenced later in R.
 
 Before you begin, be sure you have loaded the required packages outlined in the previous chapter.
 
-Once all packages are loaded, save the \emph{.wsp} file path as an R object called \textbf{wsfile}. Next, use \texttt{openWorkspace()} with your R object created in the prior step to open the \emph{.wsp} file in R. Save this as an R object. Here, this was saved as \textbf{ws} and is of flowJoWorkspace class. Here is an example of saving and opening your \emph{.wsp} filetype in R. Please ensure that \textbf{ws} is saved as a flowWorkspace object containing groups of samples before proceeding.
+Once all packages are loaded, save the \emph{.wsp} filetype path as an R object. Here, it is called \texttt{wsfile}, but you can name your R objects in any way. Next, use the \texttt{openWorkspace()} function with your R object created in the prior step to open the \emph{.wsp} file in R. Save this as a new R object of any name. Here it is named \texttt{ws}. This new R object will be of flowJoWorkspace class.
+
+Here is an example of saving and opening your \emph{.wsp} filetype in R. Please ensure that \texttt{ws} is saved as a flowWorkspace object containing groups of samples before proceeding. This can be verified by looking in the Environment tab in the upper right pane of your screen. Next to each saved R object will list the class that the object is saved as.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{wsfile <-}\StringTok{ "./tutorial/group1_v_group2.wsp"}
+\NormalTok{wsfile <-}\StringTok{ "../tutorial/group1_v_group2.wsp"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -283,7 +299,7 @@ Once all packages are loaded, save the \emph{.wsp} file path as an R object call
 
 \begin{verbatim}
 ## FlowJo Workspace Version  20.0 
-## File location:  ./tutorial 
+## File location:  ../tutorial 
 ## File name:  group1_v_group2.wsp 
 ## Workspace is open. 
 ## 
@@ -296,13 +312,19 @@ Once all packages are loaded, save the \emph{.wsp} file path as an R object call
 \hypertarget{parse-fcs-files}{%
 \section{Parse FCS files}\label{parse-fcs-files}}
 
-The next step is to read in raw FCS files. FCS files contain data from the cytometer. Standards for FCS files are listed \href{http://software.broadinstitute.org/cancer/software/genepattern/attachments/fcs_3_1_standard.pdf}{here}.
+The next step is to read in raw FCS files. FCS files contain data from the flow cytometer. Standards for FCS files are listed \href{http://software.broadinstitute.org/cancer/software/genepattern/attachments/fcs_3_1_standard.pdf}{here}.
 
-Raw FCS files are read using the \texttt{parseWorkspace} function. This function will read the FCS files and transform, compensate, and gate according to parameters defined from the \emph{.wsp} flowJo workspace, which is now saved as an R object of class flowWorkspace. The \texttt{parseWorkspace} call requires the object that results from running \texttt{openWorkspace}. Here, we named this object \texttt{ws}. The function \texttt{parseWorkspace()} also requires the name of the samples to read in. To list sample names, use the \texttt{getSampleGroups()} function on your flowWorkspace class object. Other options may be customized based on particular needs. A new R object named \texttt{gating\_set} is then created and will be a GatingSet object. The \texttt{isNcdf\ =\ TRUE} call saves this output to disk rather that into memory because the files are large. Here is an example of parsing FCS files. As this function runs, you will see several messages appear as the FCS files are loaded and the manual gating scheme is replicated. After this, \texttt{attributes()} is used to examine the data.
+Raw FCS files are read using the \texttt{parseWorkspace()} function. This function will read the FCS files and transform, compensate, and gate according to parameters defined from the \emph{.wsp} flowJo workspace, which is now saved as an R object of class flowWorkspace. The \texttt{parseWorkspace()} call requires the object that results from running \texttt{openWorkspace()}. Here, we named this object \texttt{ws}. The function \texttt{parseWorkspace()} also requires the name of the samples to read in. To list sample names, use the \texttt{getSampleGroups()} function on your flowWorkspace class object. You can then choose the sample names based on the results of \texttt{getSampleGroups()}
+
+A new R object, here named \texttt{gating\_set}, is then created and will be a GatingSet object. The \texttt{isNcdf\ =\ TRUE} call saves this output to disk rather that into memory because the FCS files are large. The \texttt{sampNloc\ =\ \textquotesingle{}sampleNode\textquotesingle{}} tells R where to retrieve the FCS file names. The options for \texttt{sampNloc} can be either ``keyword'' or ``sampleNode''.
+
+Here is an example of parsing FCS files. As this function runs, you will see several messages appear as the FCS files are loaded and the manual gating scheme is replicated. After this, \texttt{attributes()} is used to examine the data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gating_set <-}\StringTok{ }\KeywordTok{parseWorkspace}\NormalTok{(ws, }\DataTypeTok{name =} \StringTok{"Samples"}\NormalTok{, }\DataTypeTok{path =} \StringTok{"./tutorial/group1_v_group2"}\NormalTok{, }\DataTypeTok{isNcdf =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sampNloc =} \StringTok{'sampleNode'}\NormalTok{)}
+\NormalTok{gating_set <-}\StringTok{ }\KeywordTok{parseWorkspace}\NormalTok{(ws, }\DataTypeTok{name =} \StringTok{"Samples"}\NormalTok{, }
+                             \DataTypeTok{path =} \StringTok{"../tutorial/group1_v_group2"}\NormalTok{, }
+                             \DataTypeTok{isNcdf =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{sampNloc =} \StringTok{'sampleNode'}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -320,7 +342,7 @@ Raw FCS files are read using the \texttt{parseWorkspace} function. This function
 \hypertarget{visualize-and-verify}{%
 \section{Visualize and Verify}\label{visualize-and-verify}}
 
-It is helpful to now visualize both the gating template and gates on a subset of the data in order to verify the gating scheme. This will ensure consistency between the flowJo workspace and the manual gates recreated in R. First, save a subset of the \texttt{gating\_set} as follows. The following saves the first FCS file of \textbf{gating\_set} as \textbf{gh}. Since each FCS file corresponds to an individual experiment, this saves the first experiment of the group.
+It is helpful to now visualize both the gating template and gates on a subset of the data in order to verify the gating scheme. This will ensure consistency between the flowJo workspace and the manual gates recreated in R. First, save a subset of the GatingSet object type, here named \texttt{gating\_set}. The following saves the first FCS file of \texttt{gating\_set} as \texttt{gh}, which will be a GatingHierarchy object type. Since each FCS file corresponds to an individual experiment, this saves the first experiment of the group.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -337,7 +359,7 @@ It is helpful to now visualize both the gating template and gates on a subset of
 \hypertarget{plot}{%
 \subsection{plot()}\label{plot}}
 
-The plot() function will visualize the current gating hierarchy when applied to an object of class GatingHierarchy. This can be done for the entire gating hierarchy or a specific population as seen below.
+The \texttt{plot()} function will visualize the current gating hierarchy when applied to an object of class GatingHierarchy. This can be done for the entire gating hierarchy or a specific population as seen below.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -350,72 +372,72 @@ The plot() function will visualize the current gating hierarchy when applied to 
 \hypertarget{plotgate}{%
 \subsection{plotGate()}\label{plotgate}}
 
-The plotGate() function will gate the designated subset of your data according to parameters replicated from flowJo. This must also be called on an object of class GatingHierarchy.
+The \texttt{plotGate()} function will gate the designated subset of your data according to parameters replicated from flowJo. This must be called on an object of class GatingHierarchy.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{flowWorkspace.par.set}\NormalTok{(}\StringTok{"plotGate"}\NormalTok{, }\KeywordTok{list}\NormalTok{(}\DataTypeTok{xlim =} \StringTok{"data"}\NormalTok{,}
                                        \DataTypeTok{ylim =} \StringTok{"data"}\NormalTok{))}
-\KeywordTok{plotGate}\NormalTok{(gh)}
+\KeywordTok{plotGate}\NormalTok{(gh, }\DataTypeTok{xbin =} \DecValTok{128}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{bookdown_autogating_files/figure-latex/visualize_subset-1.pdf}
 
-**Note the use of \texttt{flowWorkspace.par.set()} here. Chapter 5 of this tutorial will discuss customizations such as this one.
+**Note the use of \texttt{flowWorkspace.par.set()} and \texttt{xbin} here. Chapter 5 of this tutorial will discuss these plot customizations.
 
 \hypertarget{create-.csv}{%
 \chapter{Create .csv}\label{create-.csv}}
 
-The creation of a .csv gating template is arguably the most important step to automating flow cytometry analysis. The .csv template that you create will tell \texttt{openCyto} how to gate your data. Included with this tutorial is a partial .csv template that can be used to gate the sample data. Generally, .csv templates will look like this:
+The creation of a \emph{.csv} gating template is arguably the most important step to automating flow cytometry analysis. The \emph{.csv} template that you create will tell \texttt{openCyto} how to gate your data based on parameters listed within the file. Included with this tutorial is a partial \emph{.csv} template that can be used to gate the sample data. Generally, \emph{.csv} templates will look like this:
 
-\includegraphics[width=0.6\linewidth]{./tutorial/images/entire_csv}
+\includegraphics[width=0.6\linewidth]{../tutorial/images/entire_csv}
 
 \hypertarget{csv-gating-template-structure}{%
 \section{.csv Gating Template Structure}\label{csv-gating-template-structure}}
 
-In the gating template, each row corresponds to a single cell population and the method used to gate that population. When read into R, the .csv will direct gating based on parameters listed in each row and column. The .csv must contain 10 predefined columns as seen here:
+In the gating template, each row corresponds to a single cell population and the method used to gate that population. When read into R, the \emph{.csv} will direct gating based on parameters listed in each row and column. The \emph{.csv} must contain 10 predefined columns as seen here:
 
-\includegraphics[width=0.6\linewidth]{./tutorial/images/cols}
+\includegraphics[width=0.6\linewidth]{../tutorial/images/cols}
 
 \hypertarget{alias}{%
 \subsection{\texorpdfstring{\texttt{alias}}{alias}}\label{alias}}
 
 The first column must be titled \texttt{alias}. This is where you will put your cell population names. Remember, each row corresponds to a single cell population. Population names in the \texttt{alias} column must be unique.
 
-\includegraphics[width=0.6\linewidth]{./tutorial/images/alias}
+\includegraphics[width=0.1\linewidth]{../tutorial/images/alias}
 
 \hypertarget{pop}{%
 \subsection{\texorpdfstring{\texttt{pop}}{pop}}\label{pop}}
 
 The second column must be titled \texttt{pop}. This column will contain a \texttt{+} or \texttt{-} to designate which subset or quadrant will be gated. A \texttt{+} will gate the positive subset while a \texttt{-} will gate the negative. This column can only contain strings of \texttt{+} and \texttt{-}, so do not use any characters as separators for quadrant gates.
 
-\includegraphics[width=0.6\linewidth]{./tutorial/images/pop}
+\includegraphics[width=0.1\linewidth]{../tutorial/images/pop}
 
 \hypertarget{parent}{%
 \subsection{\texorpdfstring{\texttt{parent}}{parent}}\label{parent}}
 
 The third column must be titled \texttt{parent}. This column refers to the parent cell population, or where the current cell population originates from. Similar to the \texttt{alias} column, \texttt{parent} names must be unique. This column cannot contain any commas, otherwise \texttt{openCyto} will assume the population has multiple parents and you will get an error message.
 
-\includegraphics[width=0.6\linewidth]{./tutorial/images/parent}
+\includegraphics[width=0.1\linewidth]{../tutorial/images/parent}
 
 \hypertarget{remaining-template-columns}{%
 \subsection{Remaining template columns}\label{remaining-template-columns}}
 
 \texttt{dims}- channel or marker names for gating\\
 \texttt{gating\_method}- gating function (supported options listed above)\\
-quadrantGate\\
-rangeGate\\
-quantileGate\\
-mindensity\\
-tailgate\\
-cytokine\\
-flowClust\\
-boundary\\
-singletGate\\
-transitional\\
-plolyfunctionalityGate\\
-flowDensity
+-quadrantGate\\
+-rangeGate\\
+-quantileGate\\
+-mindensity\\
+-tailgate\\
+-cytokine\\
+-flowClust\\
+-boundary\\
+-singletGate\\
+-transitional\\
+-plolyfunctionalityGate\\
+-flowDensity\\
 \texttt{gating\_args}- arguments to be passed to gating function
 \texttt{collapseDataforGating}- data is collapsed and replicated across all samples\\
 \texttt{groupBy}- used to group samples into unique combinations\\
@@ -425,7 +447,7 @@ flowDensity
 \hypertarget{creating-the-template}{%
 \section{Creating the Template}\label{creating-the-template}}
 
-The gating template can be created manually or assisted by the use of the \texttt{templateGen()} function. The function \texttt{templateGen()} will input the \texttt{alias}, \texttt{pop}, \texttt{parent}, and \texttt{dims} columns and the rest must be completed manually. To use \texttt{templateGen()}, you must input a GatingHierarchy object. In this example, that is \textbf{gh}, the subset created from \textbf{gating\_set}.
+The gating template can be created manually or assisted by the use of the \texttt{templateGen()} function. The function \texttt{templateGen()} will input the \texttt{alias}, \texttt{pop}, \texttt{parent}, and \texttt{dims} columns and the rest must be completed manually. To use \texttt{templateGen()}, you must input a GatingHierarchy object. In this example, that is \texttt{gh}, the subset created from \texttt{gating\_set}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -458,7 +480,7 @@ The gating template can be created manually or assisted by the use of the \textt
 ## 6                  <NA>    <NA>                 <NA>               <NA>
 \end{verbatim}
 
-The auto-filled template will generate within the R Console and can then be saved locally with the following code. You will see that all columns besides the first four will contain NA values. These are the values that must be manually input to complete the .csv.
+The auto-filled template will generate within the R Console and can then be saved locally with the following code. You will see that all columns besides the first four will contain NA values. These are the values that must be manually input to complete the \emph{.csv}. Do not keep any NA values in your final \emph{.csv}. Rather, erase NA's for cells that will be left blank. The following code will save the gating template created with \texttt{templateGen()} as \emph{gt.csv} to your computer. This will save to your current working directory. If you are unsure of this location, type \texttt{getwd()} into the R Console to retrieve the path.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -466,7 +488,7 @@ The auto-filled template will generate within the R Console and can then be save
 \end{Highlighting}
 \end{Shaded}
 
-If you choose to create the gating template manually, the same conventions must be followed. Start with a blank spreadsheet. Next, fill in the 10 required column names. From there, use the manual gating hierarchy to fill in each cell population \texttt{alias}. Fill in the remainder accordingly.
+If you choose to create the gating template manually, the same conventions must be followed. Start with a blank spreadsheet. Next, fill in the 10 required column names. From there, you can use the manual gating hierarchy plotted in the previous chapter to fill in each cell population \texttt{alias}. Fill in the remainder accordingly.
 
 There will likely be troubleshooting involved in this process. \href{https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html\#14_gating_method_that_generates_multiple_populations}{This} is a great place to start if you're seeking more information on the gating template. The \texttt{openCyto} \href{https://github.com/RGLab/openCyto}{GitHub page} is also very responsive to issues posted.
 
@@ -476,24 +498,22 @@ There will likely be troubleshooting involved in this process. \href{https://www
 \hypertarget{load-.csv-into-r}{%
 \section{Load .csv into R}\label{load-.csv-into-r}}
 
-As noted in the previous chapter, there is a sample gating template titled \emph{partial.csv} with the sample data. This may serve as a guide to creating your own. When the .csv gating template is complete, it is then read into R and saved as \textbf{gt}, a gatingTemplate object.
+As noted in the previous chapter, there is a sample gating template titled \emph{``partial.csv''} with the sample data. This may serve as a guide to creating your own. When the .csv gating template is complete, it is then read into R and saved as \texttt{gt}, a gatingTemplate object.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gt <-}\StringTok{ }\KeywordTok{gatingTemplate}\NormalTok{(}\StringTok{"./tutorial/partial_gt.csv"}\NormalTok{)}
+\NormalTok{gt <-}\StringTok{ }\KeywordTok{gatingTemplate}\NormalTok{(}\StringTok{"../tutorial/partial_gt.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-The flow cytometry equipment at CSU will compensate and transform the data automatically. Other tutorials may highlight the steps to compensate and transform data, but these are not relevant to CSU at this moment. In the event that equipment changes, it may be necessary to complete compensation and transformation steps to prepare data. More on the current equipment used as CSU \href{https://www.umassmed.edu/facslab/instrument/core-cytek-aurora2/}{here}.
 
 \hypertarget{read-in-raw-fcs-files}{%
 \section{Read in raw FCS files}\label{read-in-raw-fcs-files}}
 
-Now that the GatingTemplate object has been loaded into R, you will need to load in raw FCS files to perform the automated gating on. For gating, these files must be in a GatingSet object type, which requires the following steps. When the path is saved using \texttt{list.files}, a character matrix of file names will be saved. Next, \texttt{read.ncdfFlowSet} will save FCS files as a ncdfFlowSet obect. The \texttt{GatingSet} function will then save the FCS files as a GatingSet object. In this form, the FCS files can be input and gated.
+Now that the GatingTemplate object has been loaded into R, you will need to also load raw FCS files to perform the automated gating on. For gating, these files must be in a GatingSet object type. The path is saved as a character matrix of file names using \texttt{list.files()}. Here, this matrix is saved as \texttt{fcs\_files}. Next, \texttt{read.ncdfFlowSet()} will save FCS files as a ncdfFlowSet object, here named \texttt{ncfs}. The \texttt{GatingSet} function will then save the FCS files as a GatingSet object, here named \texttt{gs\_auto}. In this form, the FCS files can be input and gated. Use the following code to perform these steps.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fcs_files <-}\StringTok{ }\KeywordTok{list.files}\NormalTok{(}\DataTypeTok{path =} \StringTok{"./tutorial/group1_v_group2"}\NormalTok{, }\DataTypeTok{full.names =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{fcs_files <-}\StringTok{ }\KeywordTok{list.files}\NormalTok{(}\DataTypeTok{path =} \StringTok{"../tutorial/group1_v_group2"}\NormalTok{, }\DataTypeTok{full.names =} \OtherTok{TRUE}\NormalTok{)}
 \NormalTok{ncfs  <-}\StringTok{ }\KeywordTok{read.ncdfFlowSet}\NormalTok{(}\DataTypeTok{files =}\NormalTok{ fcs_files)}
 \NormalTok{gs_auto <-}\StringTok{ }\KeywordTok{GatingSet}\NormalTok{(ncfs)}
 \end{Highlighting}
@@ -502,7 +522,7 @@ Now that the GatingTemplate object has been loaded into R, you will need to load
 \hypertarget{apply-gating}{%
 \section{Apply Gating}\label{apply-gating}}
 
-At this point, you now have GatingTemplate and GatingSet object to be used for gating. Apply your GatingTemplate object to the GatingSet object, where x = GatingTemplate object and y = GatingSet object.
+At this point, you now have GatingTemplate and GatingSet object to be used for gating. Apply your GatingTemplate object to the GatingSet object, where x = GatingTemplate object and y = GatingSet object. Here, the GatingTemplate object is named \texttt{gt} and the GatingSet object is named \texttt{gs\_auto}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -513,7 +533,7 @@ At this point, you now have GatingTemplate and GatingSet object to be used for g
 \hypertarget{plot-automated-gating}{%
 \section{Plot Automated Gating}\label{plot-automated-gating}}
 
-Just as before, plot both the gating hierarchy and the automated gates. You may notice extra nodes have been added to the hierarchy. Chapter 5 will highlight additional cusomization to remove unwanted nodes and improve upon visualization.
+Just as before, plot both the gating hierarchy and the automated gates.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -534,7 +554,7 @@ Just as before, plot both the gating hierarchy and the automated gates. You may 
 \hypertarget{population-statistics}{%
 \section{Population Statistics}\label{population-statistics}}
 
-Both counts and frequencies can be generated for analysis. This can be generate based on the analysis completed in R, or pulled directly from flowJo. To pull from flowJo, simply at \texttt{flowJo=TRUE} to either code chunk below.
+Both counts and frequencies of cell types in samples can be generated for analysis. Statistics can be generated from R or pulled directly from flowJo. To pull from flowJo, add \texttt{flowJo=TRUE} to either code chunk below.
 
 \textbf{Counts}
 
@@ -548,10 +568,10 @@ Both counts and frequencies can be generated for analysis. This can be generate 
 ##          name Population    Parent Count ParentCount
 ## 1: X_group1_1  nonDebris      root 87715      142158
 ## 2: X_group1_1   singlets nonDebris 80775       87715
-## 3: X_group1_1      lymph  singlets 69710       80775
-## 4: X_group1_1     viable     lymph 40982       69710
-## 5: X_group1_1        CD3    viable 40937       40982
-## 6: X_group1_1        CD8       CD3  1888       40937
+## 3: X_group1_1      lymph  singlets 69718       80775
+## 4: X_group1_1     viable     lymph 40986       69718
+## 5: X_group1_1        CD3    viable 40941       40986
+## 6: X_group1_1        CD8       CD3  1888       40941
 \end{verbatim}
 
 \textbf{Frequencies}
@@ -566,70 +586,25 @@ Both counts and frequencies can be generated for analysis. This can be generate 
 ##          name Population    Parent Count ParentCount
 ## 1: X_group1_1  nonDebris      root 87715      142158
 ## 2: X_group1_1   singlets nonDebris 80775       87715
-## 3: X_group1_1      lymph  singlets 69710       80775
-## 4: X_group1_1     viable     lymph 40982       69710
-## 5: X_group1_1        CD3    viable 40937       40982
-## 6: X_group1_1        CD8       CD3  1888       40937
+## 3: X_group1_1      lymph  singlets 69718       80775
+## 4: X_group1_1     viable     lymph 40986       69718
+## 5: X_group1_1        CD3    viable 40941       40986
+## 6: X_group1_1        CD8       CD3  1888       40941
 \end{verbatim}
 
-\hypertarget{customization}{%
-\chapter{Customization}\label{customization}}
+\hypertarget{plot-customization}{%
+\chapter{Plot Customization}\label{plot-customization}}
 
-It is possible that additional customization may be necessary when working with the \texttt{openCyto} framework. Below are three common customizations that will be outlined in this chapter.
+Below are two common customizations that you may want to include when plotting gates.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Hiding unwanted nodes
+  Adjust plot axes\\
 \item
-  Renaming nodes
-\item
-  Adjusting plots
+  Binning in a plot
 \end{enumerate}
-
-\hypertarget{hiding-unwanted-nodes}{%
-\section{Hiding unwanted nodes}\label{hiding-unwanted-nodes}}
-
-When automating analysis, there may be nodes that were not predefined in the .csv gating template or nodes that may not be of interest in your particular analysis. Plotting the gating hierarchy using the \texttt{plot()} function will display this and then nodes can be hidden based on need with the following code. Below is an example of a ``full'' gating hierarchy and then the same hierarchy with the CD3+ node removed.
-
-\textbf{Full Hierarchy}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(gh)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{bookdown_autogating_files/figure-latex/full_nodes-1.pdf}
-
-\textbf{CD3+ Removed Hierarchy}
-
-To remove nodes, first save the unwanted nodes as an R object named \textbf{nodesToHide}. Next, use the code following the \texttt{lapply()} function, only replacing \textbf{gs} with your GatingSet object name.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{nodesToHide <-}\StringTok{ "CD3+"}
-\KeywordTok{lapply}\NormalTok{(nodesToHide, }\ControlFlowTok{function}\NormalTok{(thisNode)}\KeywordTok{setNode}\NormalTok{(gh, thisNode, }\OtherTok{FALSE}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [[1]]
-## NULL
-\end{verbatim}
-
-\hypertarget{renaming-nodes}{%
-\section{Renaming nodes}\label{renaming-nodes}}
-
-Rename nodes based on your preferences with the following code. Within the \texttt{setNode} function, the first input is the current cell population name and the second is the desired change.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{setNode}\NormalTok{(}\StringTok{"Live"}\NormalTok{, }\StringTok{"Viable"}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(gh)}
-\end{Highlighting}
-\end{Shaded}
 
 \hypertarget{adjusting-plots}{%
 \section{Adjusting plots}\label{adjusting-plots}}
@@ -637,7 +612,7 @@ Rename nodes based on your preferences with the following code. Within the \text
 \hypertarget{adjust-plot-axes}{%
 \subsection{Adjust plot axes}\label{adjust-plot-axes}}
 
-As seen in chapter 2, it may be necessary to adjust the plot axes in order to best view the gates. This is done using the code below. Setting xlim and ylim to ``data'' adjusts plot based on the actual data range, rather than instrument specifications. Custom ranges can also be input numerically.
+As seen in Chapter 2, it may be necessary to adjust the plot axes in order to best view the gates. This is done using the code below. Setting xlim and ylim to ``data'' adjusts plot based on the actual data range, rather than instrument specifications. Custom ranges can also be input numerically.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -656,44 +631,44 @@ Here is a comparison of xlim and ylim set as ``instrument'' and then ``data''.
 
 \includegraphics[width=0.6\linewidth]{/Users/monhait/Desktop/bookdown_autogating/images/cd8_data}
 
-\hypertarget{transform-data-for-better-visualization}{%
-\subsection{Transform data for better visualization}\label{transform-data-for-better-visualization}}
+\hypertarget{binning}{%
+\subsection{Binning}\label{binning}}
 
-Although data will not be altered in any way, transformation may allow for better visualization. The most common form of transformation for flow cytometry analysis is \href{http://docs.flowjo.com/vx/graphs-and-gating/gw-transform-overview/}{biexponential}. Below is a comparison of gates without transformation and gates that have been transformed.
+Adjusting the bins changes will alter the resolution of each plot. The default is \texttt{xbin\ =\ 32}. Below
 
-\textbf{Without Transformation}
+\textbf{Default Binning}
 
-\includegraphics[width=0.6\linewidth]{/Users/monhait/Desktop/bookdown_autogating/images/no_trans}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotGate}\NormalTok{(gh)}
+\end{Highlighting}
+\end{Shaded}
 
-\textbf{Transformed}
+\includegraphics{bookdown_autogating_files/figure-latex/no_bin-1.pdf}
 
-\includegraphics[width=0.6\linewidth]{/Users/monhait/Desktop/bookdown_autogating/images/trans}
+\textbf{Greater Resolution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotGate}\NormalTok{(gh, }\DataTypeTok{xbin =} \DecValTok{128}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{bookdown_autogating_files/figure-latex/bin_128-1.pdf}
 
 \hypertarget{appendix}{%
 \chapter{Appendix}\label{appendix}}
 
-\hypertarget{function-and-r-object-definitions}{%
-\section{Function and R Object Definitions}\label{function-and-r-object-definitions}}
+\hypertarget{function-definitions}{%
+\section{Function Definitions}\label{function-definitions}}
 
 \begin{tabular}{c|c}
 \hline
-Function/Object Name & Definition\\
+Function Name & Use\\
 \hline
-wsfile & flowJo .wsp file location\\
+openWorkspace() & function used to read in wsfile\\
 \hline
-openWorkspace() & function used to read in **wsfile**\\
-\hline
-ws & read in data from flowJo\\
-\hline
-parseWorkspace() & function to extract FCS files from **ws**\\
-\hline
-gating\_set & parsed FCS files to be gated\\
-\hline
-clone() & function used to create a clone of **gating\_set**\\
-\hline
-gh & subset of gating\_set\\
-\hline
-gt & .csv gating template\\
+parseWorkspace() & function to extract FCS files from ws\\
 \hline
 templateGen() & function used to generate a .csv template from existing manual gates\\
 \hline
@@ -706,6 +681,72 @@ plot() & function to visualize gating tree\\
 plotGate() & function to visualize gates\\
 \hline
 \end{tabular}
+
+\hypertarget{r-object-definitions}{%
+\section{R Object Definitions}\label{r-object-definitions}}
+
+\begin{tabular}{c|c}
+\hline
+R Object Name & Use\\
+\hline
+wsfile & flowJo .wsp file location\\
+\hline
+ws & read in data from flowJo\\
+\hline
+gating\_set & parsed FCS files to be gated\\
+\hline
+gh & subset of gating\_set\\
+\hline
+gt & .csv gating template\\
+\hline
+gs\_auto & raw FCS files to apply automated gating\\
+\hline
+\end{tabular}
+
+\hypertarget{csu-flow-cytometer-information}{%
+\section{CSU Flow Cytometer Information}\label{csu-flow-cytometer-information}}
+
+The flow cytometry equipment at CSU does not require further compensation of data. Other tutorials may highlight the steps to compensate data, but these steps are not necessary to CSU at this moment. In the event that equipment changes, it may be necessary to complete compensation steps to prepare data. More on the current equipment used as CSU \href{https://www.umassmed.edu/facslab/instrument/core-cytek-aurora2/}{here}.
+
+\hypertarget{transform-data-for-better-visualization}{%
+\section{Transform data for better visualization}\label{transform-data-for-better-visualization}}
+
+Transformation of these data may allow for better plotting. One common form of transformation for flow cytometry analysis is \href{http://docs.flowjo.com/vx/graphs-and-gating/gw-transform-overview/}{biexponential}.
+
+\hypertarget{references}{%
+\chapter{References}\label{references}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Data File Standard for Flow Cytometry. (n.d.). International Society for Advancement of Cytometry.
+  Retrieved May 10, 2019,
+  from \url{http://software.broadinstitute.org/cancer/software/genepattern/attachments/fcs_3_1_standard.pdf}
+\item
+  Duggan, R. (2014, August 20). Cytometry on Air: Analyzing Flow Cytometry Data using R.
+  \url{https://www.youtube.com/watch?v=_B7mo6dB3BU}
+\item
+  Finak, G. (2014, July 10). OpenCyto Practical Workshop. Retrieved February 14, 2019, from
+  \url{https://www.bioconductor.org/help/course-materials/2014/BioC2014/OpenCytoPracticalComponent.html}
+\end{enumerate}
+
+4 How to plot gated data. (n.d.). Retrieved March 10, 2019, from \url{https://www.bioconductor.org/packages/devel/bioc/vignettes/flowWorkspace/inst/doc/plotGate.html}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\item
+  How to write a csv gating template. (n.d.). Retrieved March 3, 2019, from
+  \url{https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html\#14_}
+  gating\_method\_that\_generates\_multiple\_populations
+\item
+  Saving your Analysis. (n.d.). Retrieved May 5, 2019, from
+  \url{http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/}
+\item
+  Verschoor CP, Lelic A, Bramson JL and Bowdish DME (2015) An introduction to automated
+  flow cytometry gating tools and their implementation. Front. Immunol. 6:380.
+  doi: 10.3389/fimmu.2015.00380
+\end{enumerate}
 
 
 \end{document}

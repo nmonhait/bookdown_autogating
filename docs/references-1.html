@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 8 References | Automated Gating of Flow Cytometry Data using the Bioconductor openCyto Framework</title>
+  <meta name="description" content="This tutorial was created to allow users to automate flow cytometry analysis in R using the openCyto package. The tutorial includes steps to complete automation from a flowJo Workspace file. Full details on tutorial contents are included in the following chapters.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 8 References | Automated Gating of Flow Cytometry Data using the Bioconductor openCyto Framework" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This tutorial was created to allow users to automate flow cytometry analysis in R using the openCyto package. The tutorial includes steps to complete automation from a flowJo Workspace file. Full details on tutorial contents are included in the following chapters." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 References | Automated Gating of Flow Cytometry Data using the Bioconductor openCyto Framework" />
+  
+  <meta name="twitter:description" content="This tutorial was created to allow users to automate flow cytometry analysis in R using the openCyto package. The tutorial includes steps to complete automation from a flowJo Workspace file. Full details on tutorial contents are included in the following chapters." />
+  
+
+<meta name="author" content="Nichole Monhait, MPH Candidate">
+<meta name="author" content="Colorado School of Public Health, Colorado State University">
+
+
+<meta name="date" content="2019-05-14">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="appendix.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Automated Gating of Flow Cytometry Data using the Bioconductor `openCyto` Frameworke</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> What’s inside?</a></li>
+<li class="chapter" data-level="2" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>2</b> Getting Started</a><ul>
+<li class="chapter" data-level="2.1" data-path="getting-started.html"><a href="getting-started.html#required-packages-and-installation"><i class="fa fa-check"></i><b>2.1</b> Required Packages and Installation</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="getting-started.html"><a href="getting-started.html#package-descriptions"><i class="fa fa-check"></i><b>2.1.1</b> Package descriptions</a></li>
+<li class="chapter" data-level="2.1.2" data-path="getting-started.html"><a href="getting-started.html#directory-set-up"><i class="fa fa-check"></i><b>2.1.2</b> Directory set-up</a></li>
+<li class="chapter" data-level="2.1.3" data-path="getting-started.html"><a href="getting-started.html#installation"><i class="fa fa-check"></i><b>2.1.3</b> Installation</a></li>
+<li class="chapter" data-level="2.1.4" data-path="getting-started.html"><a href="getting-started.html#load-packages"><i class="fa fa-check"></i><b>2.1.4</b> Load packages</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="working-with-your-manual-gating-scheme.html"><a href="working-with-your-manual-gating-scheme.html"><i class="fa fa-check"></i><b>3</b> Working with your Manual Gating Scheme</a><ul>
+<li class="chapter" data-level="3.1" data-path="working-with-your-manual-gating-scheme.html"><a href="working-with-your-manual-gating-scheme.html#read-in-flowjo-file"><i class="fa fa-check"></i><b>3.1</b> Read in flowJo file</a></li>
+<li class="chapter" data-level="3.2" data-path="working-with-your-manual-gating-scheme.html"><a href="working-with-your-manual-gating-scheme.html#parse-fcs-files"><i class="fa fa-check"></i><b>3.2</b> Parse FCS files</a></li>
+<li class="chapter" data-level="3.3" data-path="working-with-your-manual-gating-scheme.html"><a href="working-with-your-manual-gating-scheme.html#visualize-and-verify"><i class="fa fa-check"></i><b>3.3</b> Visualize and Verify</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="working-with-your-manual-gating-scheme.html"><a href="working-with-your-manual-gating-scheme.html#plot"><i class="fa fa-check"></i><b>3.3.1</b> plot()</a></li>
+<li class="chapter" data-level="3.3.2" data-path="working-with-your-manual-gating-scheme.html"><a href="working-with-your-manual-gating-scheme.html#plotgate"><i class="fa fa-check"></i><b>3.3.2</b> plotGate()</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="create-csv.html"><a href="create-csv.html"><i class="fa fa-check"></i><b>4</b> Create .csv</a><ul>
+<li class="chapter" data-level="4.1" data-path="create-csv.html"><a href="create-csv.html#csv-gating-template-structure"><i class="fa fa-check"></i><b>4.1</b> .csv Gating Template Structure</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="create-csv.html"><a href="create-csv.html#alias"><i class="fa fa-check"></i><b>4.1.1</b> <code>alias</code></a></li>
+<li class="chapter" data-level="4.1.2" data-path="create-csv.html"><a href="create-csv.html#pop"><i class="fa fa-check"></i><b>4.1.2</b> <code>pop</code></a></li>
+<li class="chapter" data-level="4.1.3" data-path="create-csv.html"><a href="create-csv.html#parent"><i class="fa fa-check"></i><b>4.1.3</b> <code>parent</code></a></li>
+<li class="chapter" data-level="4.1.4" data-path="create-csv.html"><a href="create-csv.html#remaining-template-columns"><i class="fa fa-check"></i><b>4.1.4</b> Remaining template columns</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="create-csv.html"><a href="create-csv.html#creating-the-template"><i class="fa fa-check"></i><b>4.2</b> Creating the Template</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="automate-gating.html"><a href="automate-gating.html"><i class="fa fa-check"></i><b>5</b> Automate Gating</a><ul>
+<li class="chapter" data-level="5.1" data-path="automate-gating.html"><a href="automate-gating.html#load-.csv-into-r"><i class="fa fa-check"></i><b>5.1</b> Load .csv into R</a></li>
+<li class="chapter" data-level="5.2" data-path="automate-gating.html"><a href="automate-gating.html#read-in-raw-fcs-files"><i class="fa fa-check"></i><b>5.2</b> Read in raw FCS files</a></li>
+<li class="chapter" data-level="5.3" data-path="automate-gating.html"><a href="automate-gating.html#apply-gating"><i class="fa fa-check"></i><b>5.3</b> Apply Gating</a></li>
+<li class="chapter" data-level="5.4" data-path="automate-gating.html"><a href="automate-gating.html#plot-automated-gating"><i class="fa fa-check"></i><b>5.4</b> Plot Automated Gating</a></li>
+<li class="chapter" data-level="5.5" data-path="automate-gating.html"><a href="automate-gating.html#population-statistics"><i class="fa fa-check"></i><b>5.5</b> Population Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="plot-customization.html"><a href="plot-customization.html"><i class="fa fa-check"></i><b>6</b> Plot Customization</a><ul>
+<li class="chapter" data-level="6.1" data-path="plot-customization.html"><a href="plot-customization.html#adjusting-plots"><i class="fa fa-check"></i><b>6.1</b> Adjusting plots</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="plot-customization.html"><a href="plot-customization.html#adjust-plot-axes"><i class="fa fa-check"></i><b>6.1.1</b> Adjust plot axes</a></li>
+<li class="chapter" data-level="6.1.2" data-path="plot-customization.html"><a href="plot-customization.html#binning"><i class="fa fa-check"></i><b>6.1.2</b> Binning</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="7" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i><b>7</b> Appendix</a><ul>
+<li class="chapter" data-level="7.1" data-path="appendix.html"><a href="appendix.html#function-definitions"><i class="fa fa-check"></i><b>7.1</b> Function Definitions</a></li>
+<li class="chapter" data-level="7.2" data-path="appendix.html"><a href="appendix.html#r-object-definitions"><i class="fa fa-check"></i><b>7.2</b> R Object Definitions</a></li>
+<li class="chapter" data-level="7.3" data-path="appendix.html"><a href="appendix.html#transform-data-for-better-visualization"><i class="fa fa-check"></i><b>7.3</b> Transform data for better visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i><b>8</b> References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Automated Gating of Flow Cytometry Data using the Bioconductor <code>openCyto</code> Framework</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="references-1" class="section level1">
+<h1><span class="header-section-number">Chapter 8</span> References</h1>
+<ol style="list-style-type: decimal">
+<li><p>Data File Standard for Flow Cytometry. (n.d.). International Society for Advancement of Cytometry.
+Retrieved May 10, 2019,
+from <a href="http://software.broadinstitute.org/cancer/software/genepattern/attachments/fcs_3_1_standard.pdf" class="uri">http://software.broadinstitute.org/cancer/software/genepattern/attachments/fcs_3_1_standard.pdf</a></p></li>
+<li><p>Duggan, R. (2014, August 20). Cytometry on Air: Analyzing Flow Cytometry Data using R.
+<a href="https://www.youtube.com/watch?v=_B7mo6dB3BU" class="uri">https://www.youtube.com/watch?v=_B7mo6dB3BU</a></p></li>
+<li><p>Finak, G. (2014, July 10). OpenCyto Practical Workshop. Retrieved February 14, 2019, from
+<a href="https://www.bioconductor.org/help/course-materials/2014/BioC2014/OpenCytoPracticalComponent.html" class="uri">https://www.bioconductor.org/help/course-materials/2014/BioC2014/OpenCytoPracticalComponent.html</a></p></li>
+</ol>
+<p>4 How to plot gated data. (n.d.). Retrieved March 10, 2019, from <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/flowWorkspace/inst/doc/plotGate.html" class="uri">https://www.bioconductor.org/packages/devel/bioc/vignettes/flowWorkspace/inst/doc/plotGate.html</a></p>
+<ol start="5" style="list-style-type: decimal">
+<li><p>How to write a csv gating template. (n.d.). Retrieved March 3, 2019, from
+<a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html#14_" class="uri">https://www.bioconductor.org/packages/devel/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html#14_</a>
+gating_method_that_generates_multiple_populations</p></li>
+<li><p>Saving your Analysis. (n.d.). Retrieved May 5, 2019, from
+<a href="http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/" class="uri">http://docs.flowjo.com/vx/workspaces-and-samples/ws-savinganalysis/</a></p></li>
+<li><p>Verschoor CP, Lelic A, Bramson JL and Bowdish DME (2015) An introduction to automated
+flow cytometry gating tools and their implementation. Front. Immunol. 6:380.
+doi: 10.3389/fimmu.2015.00380</p></li>
+</ol>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="appendix.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown_autogating.pdf", "bookdown_autogating.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

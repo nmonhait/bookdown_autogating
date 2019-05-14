@@ -1,25 +1,44 @@
 # Appendix  
 
-## Function and R Object Definitions
-```{r var def table, echo = FALSE}
+## Function Definitions
+```{r fun_table, echo = FALSE}
 library(knitr)
-vars <- data.frame(var_name = c("wsfile", "openWorkspace()", "ws",
-                                "parseWorkspace()", "gating_set", "clone()",
-                                "gh", "gt", "templateGen()", "gatingTemplate()",
+vars <- data.frame(var_name = c("openWorkspace()",
+                                "parseWorkspace()",
+                                "templateGen()", "gatingTemplate()",
                                 "gating()", "plot()", "plotGate()"),
-                    definition = c("flowJo .wsp file location", 
-                                   "function used to read in **wsfile**",
-                                   "read in data from flowJo",
-                                   "function to extract FCS files from **ws**",
-                                   "parsed FCS files to be gated",
-                                   "function used to create a clone of **gating_set**",
-                                   "subset of gating_set",
-                                   ".csv gating template",
+                    definition = c( 
+                                   "function used to read in wsfile",
+                                   "function to extract FCS files from ws",
                                    "function used to generate a .csv template from existing manual gates",
                                    "function used to read in .csv template",
                                    "function used to apply gates to a gating set",
                                    "function to visualize gating tree",
                                    "function to visualize gates"))
 kable(vars, align = c("c", "c", "c", "c", "c"),
-      col.names = c("Function/Object Name", "Definition"))
+      col.names = c("Function Name", "Use"))
 ```
+
+## R Object Definitions
+
+```{r obj_table, echo = FALSE}
+library(knitr)
+vars <- data.frame(var_name = c("wsfile", "ws",
+                                "gating_set", 
+                                "gh", "gt", "gs_auto"),
+                    definition = c("flowJo .wsp file location", 
+                                   "read in data from flowJo",
+                                   "parsed FCS files to be gated",
+                                   "subset of gating_set",
+                                   ".csv gating template",
+                                   "raw FCS files to apply automated gating"))
+kable(vars, align = c("c", "c", "c", "c", "c"),
+      col.names = c("R Object Name", "Use"))
+```
+## CSU Flow Cytometer Information  
+
+The flow cytometry equipment at CSU does not require further compensation of data. Other tutorials may highlight the steps to compensate data, but these steps are not necessary to CSU at this moment. In the event that equipment changes, it may be necessary to complete compensation steps to prepare data. More on the current equipment used as CSU [here](https://www.umassmed.edu/facslab/instrument/core-cytek-aurora2/).   
+
+## Transform data for better visualization  
+
+Transformation of these data may allow for better plotting. One common form of transformation for flow cytometry analysis is [biexponential](http://docs.flowjo.com/vx/graphs-and-gating/gw-transform-overview/).  

@@ -2,20 +2,18 @@
 
 ## Load .csv into R  
 
-As noted in the previous chapter, there is a sample gating template titled *partial.csv* with the sample data. This may serve as a guide to creating your own. When the .csv gating template is complete, it is then read into R and saved as **gt**, a gatingTemplate object. 
+As noted in the previous chapter, there is a sample gating template titled *"partial.csv"* with the sample data. This may serve as a guide to creating your own. When the .csv gating template is complete, it is then read into R and saved as `gt`, a gatingTemplate object. 
 
 ```{r read_csv, warning=FALSE, message=FALSE}
-gt <- gatingTemplate("./tutorial/partial_gt.csv")
+gt <- gatingTemplate("../tutorial/partial_gt.csv")
 ```
-
-The flow cytometry equipment at CSU will compensate and transform the data automatically. Other tutorials may highlight the steps to compensate and transform data, but these are not relevant to CSU at this moment. In the event that equipment changes, it may be necessary to complete compensation and transformation steps to prepare data. More on the current equipment used as CSU [here](https://www.umassmed.edu/facslab/instrument/core-cytek-aurora2/). 
 
 ## Read in raw FCS files  
 
-Now that the GatingTemplate object has been loaded into R, you will need to load in raw FCS files to perform the automated gating on. For gating, these files must be in a GatingSet object type, which requires the following steps. When the path is saved using `list.files`, a character matrix of file names will be saved. Next, `read.ncdfFlowSet` will save FCS files as a ncdfFlowSet obect. The `GatingSet` function will then save the FCS files as a GatingSet object. In this form, the FCS files can be input and gated.  
+Now that the GatingTemplate object has been loaded into R, you will need to also load raw FCS files to perform the automated gating on. For gating, these files must be in a GatingSet object type. The path is saved as a character matrix of file names using `list.files()`. Here, this matrix is saved as `fcs_files`. Next, `read.ncdfFlowSet()` will save FCS files as a ncdfFlowSet object, here named `ncfs`. The `GatingSet` function will then save the FCS files as a GatingSet object, here named `gs_auto`. In this form, the FCS files can be input and gated. Use the following code to perform these steps.      
 
 ```{r raw_fcs, message=FALSE, warning=FALSE}
-fcs_files <- list.files(path = "./tutorial/group1_v_group2", full.names = TRUE)
+fcs_files <- list.files(path = "../tutorial/group1_v_group2", full.names = TRUE)
 ncfs  <- read.ncdfFlowSet(files = fcs_files)
 gs_auto <- GatingSet(ncfs)
 ```
@@ -27,7 +25,7 @@ pData(gs_auto)[["name"]] <- newNames
 ```
 ## Apply Gating  
 
-At this point, you now have GatingTemplate and GatingSet object to be used for gating. Apply your GatingTemplate object to the GatingSet object, where x = GatingTemplate object and y = GatingSet object.   
+At this point, you now have GatingTemplate and GatingSet object to be used for gating. Apply your GatingTemplate object to the GatingSet object, where x = GatingTemplate object and y = GatingSet object. Here, the GatingTemplate object is named `gt` and the GatingSet object is named `gs_auto`.     
 
 ```{r apply_gt, message=FALSE, warning=FALSE}
 gating(x = gt, y = gs_auto)
@@ -36,7 +34,7 @@ gating(x = gt, y = gs_auto)
     
 ## Plot Automated Gating  
 
-Just as before, plot both the gating hierarchy and the automated gates. You may notice extra nodes have been added to the hierarchy. Chapter 5 will highlight additional cusomization to remove unwanted nodes and improve upon visualization.
+Just as before, plot both the gating hierarchy and the automated gates. 
 
 ```{r plot_auto_gates, warning = FALSE}
 plotGate(gs_auto[[1]])
@@ -47,7 +45,7 @@ plot(gs_auto[[1]])
 
 ## Population Statistics  
 
-Both counts and frequencies can be generated for analysis. This can be generate based on the analysis completed in R, or pulled directly from flowJo. To pull from flowJo, simply at `flowJo=TRUE` to either code chunk below.  
+Both counts and frequencies of cell types in samples can be generated for analysis. Statistics can be generated from R or pulled directly from flowJo. To pull from flowJo, add `flowJo=TRUE` to either code chunk below.  
 
 **Counts**  
 
